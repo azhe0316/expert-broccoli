@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Seasonal Field Notes - 儿童户外研学纪实摄影作品集，记录孩子在四季自然里的探索、行动与成长。"
+    />
+    <title>Seasonal Field Notes | 儿童户外研学纪实摄影</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="site-header" data-header>
+      <a class="brand" href="#top" aria-label="Seasonal Field Notes home">Seasonal Field Notes</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span></span>
+        <span></span>
+      </button>
+      <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+        <a href="#work">Work</a>
+        <a href="#seasons">Seasons</a>
+        <a href="#approach">Approach</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero section-pad">
+        <div class="hero-copy">
+          <p class="eyebrow">Clean Editorial Nature Documentary</p>
+          <h1>Seasonal Field Notes</h1>
+          <p class="hero-subtitle">儿童户外研学纪实摄影</p>
+          <p class="hero-lead">记录孩子在四季自然里的探索、行动与成长。</p>
+          <p class="hero-en">
+            Documentary photography for children’s outdoor learning, from forest trails to snowy fields.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#work">View Work</a>
+            <a class="button button-secondary" href="#seasons">Explore Seasons</a>
+          </div>
+        </div>
+        <figure class="hero-image image-frame">
+          <!-- Hero image: replace assets/images/hero/hero.jpg with your main visual. -->
+          <img src="assets/images/hero/hero.jpg" alt="孩子在自然环境中进行户外研学活动" />
+          <figcaption>Outdoor learning, observed quietly.</figcaption>
+        </figure>
+      </section>
+
+      <section class="intro-line">
+        <p>
+          For forest trails, stream crossings, field studies and winter camps. A quiet archive of movement,
+          weather, attention and growth.
+        </p>
+      </section>
+
+      <section class="section-pad section" id="seasons">
+        <div class="section-heading compact">
+          <p class="eyebrow">Four Seasons</p>
+          <h2>四季自然手记</h2>
+          <p>以季节作为内容线索，进入孩子在春、夏、秋、冬自然活动中的观察、行动与故事。</p>
+        </div>
+
+        <div class="season-entry-carousel" data-season-carousel data-cursor="drag">
+          <div class="season-entry-stage">
+          <button class="season-entry spring is-active" type="button" data-season-target="spring">
+            <figure class="image-frame">
+              <!-- Season cover: spring. -->
+              <img src="assets/images/seasons/spring-cover.jpg" alt="春季茶田与新叶中的儿童研学活动" />
+            </figure>
+            <div class="season-entry-copy">
+              <span class="season-dot"></span>
+              <p>SPRING 春</p>
+              <h3>茶田、昆虫、新叶与第一次远足。</h3>
+            </div>
+          </button>
+          <button class="season-entry summer" type="button" data-season-target="summer">
+            <figure class="image-frame">
+              <!-- Season cover: summer. -->
+              <img src="assets/images/seasons/summer-cover.jpg" alt="夏季溪流、骑行和山野奔跑活动" />
+            </figure>
+            <div class="season-entry-copy">
+              <span class="season-dot"></span>
+              <p>SUMMER 夏</p>
+              <h3>溪流、骑行、湿透的鞋和山野奔跑。</h3>
+            </div>
+          </button>
+          <button class="season-entry autumn" type="button" data-season-target="autumn">
+            <figure class="image-frame">
+              <!-- Season cover: autumn. -->
+              <img src="assets/images/seasons/autumn-cover.jpg" alt="秋季稻田、莲藕和泥土里的研学活动" />
+            </figure>
+            <div class="season-entry-copy">
+              <span class="season-dot"></span>
+              <p>AUTUMN 秋</p>
+              <h3>稻田、莲藕、泥土与丰收的身体经验。</h3>
+            </div>
+          </button>
+          <button class="season-entry winter" type="button" data-season-target="winter">
+            <figure class="image-frame">
+              <!-- Season cover: winter. -->
+              <img src="assets/images/seasons/winter-cover.jpg" alt="冬季雪地、滑行和安静山径中的孩子" />
+            </figure>
+            <div class="season-entry-copy">
+              <span class="season-dot"></span>
+              <p>WINTER 冬</p>
+              <h3>雪地、呼吸、滑行与安静的山径。</h3>
+            </div>
+          </button>
+          </div>
+          <div class="season-entry-controls">
+            <div class="season-progress" aria-hidden="true">
+              <span data-season-progress></span>
+            </div>
+            <button class="season-arrow season-arrow-prev" type="button" data-season-prev aria-label="Previous season"></button>
+            <button class="season-arrow season-arrow-next" type="button" data-season-next aria-label="Next season"></button>
+          </div>
+        </div>
+      </section>
+
+      <section class="work-stack-section" id="work" data-work-stack>
+        <div class="work-stack-intro section-pad">
+          <p class="eyebrow">Selected Works</p>
+          <h2>活动多样性记录</h2>
+          <p>从山野徒步、茶田观察到溪流与雪地活动，以连续影像记录孩子在不同自然场景中的行动与成长。</p>
+        </div>
+        <div class="work-stack">
+          <article class="work-panel is-active" data-work-panel data-work-key="hiking" role="button" tabindex="0">
+            <figure class="image-frame"><img src="assets/images/activities/hiking-cover.jpg" alt="山野徒步中的儿童研学纪实摄影" /></figure>
+            <div class="work-panel-copy">
+              <p class="eyebrow">Selected Works</p>
+              <h2>Hiking / Forest Trail</h2>
+              <p>步道、队伍节奏、抵达与途中观察。</p>
+              <span class="work-panel-button">查看照片</span>
+            </div>
+          </article>
+          <article class="work-panel" data-work-panel data-work-key="stream" role="button" tabindex="0">
+            <figure class="image-frame"><img src="assets/images/activities/stream-trekking-cover.jpg" alt="溪流溯溪活动中的儿童户外摄影" /></figure>
+            <div class="work-panel-copy">
+              <p class="eyebrow">Selected Works</p>
+              <h2>Stream Trekking</h2>
+              <p>湿透的鞋、石头之间的判断和夏季水线。</p>
+              <span class="work-panel-button">查看照片</span>
+            </div>
+          </article>
+          <article class="work-panel" data-work-panel data-work-key="tea" role="button" tabindex="0">
+            <figure class="image-frame"><img src="assets/images/activities/tea-picking-cover.jpg" alt="孩子在茶田中采茶" /></figure>
+            <div class="work-panel-copy">
+              <p class="eyebrow">Selected Works</p>
+              <h2>Tea Picking</h2>
+              <p>茶田里的手势、气味、坡地和春天的工作感。</p>
+              <span class="work-panel-button">查看照片</span>
+            </div>
+          </article>
+          <article class="work-panel" data-work-panel data-work-key="lotus" role="button" tabindex="0">
+            <figure class="image-frame"><img src="assets/images/activities/lotus-root-digging-cover.jpg" alt="孩子在泥土中挖藕和田野研学" /></figure>
+            <div class="work-panel-copy">
+              <p class="eyebrow">Selected Works</p>
+              <h2>Lotus Root Digging</h2>
+              <p>泥土、协作、挖掘和丰收之前的身体经验。</p>
+              <span class="work-panel-button">查看照片</span>
+            </div>
+          </article>
+          <div class="work-stack-controls" aria-label="Selected works scroll controls">
+            <button class="work-stack-arrow work-stack-arrow-up" type="button" data-work-prev aria-label="Previous activity"></button>
+            <div class="work-stack-progress" aria-hidden="true">
+              <span data-work-progress></span>
+            </div>
+            <button class="work-stack-arrow work-stack-arrow-down" type="button" data-work-next aria-label="Next activity"></button>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-pad section" id="approach">
+        <div class="section-heading">
+          <p class="eyebrow">Approach</p>
+          <h2>拍摄方式</h2>
+        </div>
+        <div class="approach-grid">
+          <article>
+            <span>01</span>
+            <h3>Low-intervention Documentary</h3>
+            <h4>低干扰纪实拍摄</h4>
+            <p>尽量不打断孩子的活动状态，以观察和跟随的方式记录真实瞬间。</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>Story-driven Coverage</h3>
+            <h4>活动叙事覆盖</h4>
+            <p>从抵达、行进、观察、互动到结束，完整记录一场活动的过程，而不是只拍几张好看的照片。</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>Natural Color & Clean Editing</h3>
+            <h4>自然色彩与干净后期</h4>
+            <p>后期调色保持通透、自然、克制，让孩子的神情和环境本身成为画面重点。</p>
+          </article>
+          <article>
+            <span>04</span>
+            <h3>For Families & Organizations</h3>
+            <h4>兼顾家长反馈与机构传播</h4>
+            <p>照片既适合家长查看，也适合研学机构用于公众号、小红书、官网、招生物料和品牌传播。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-pad section services" id="services">
+        <div class="section-heading compact">
+          <p class="eyebrow">Services</p>
+          <h2>拍摄服务</h2>
+          <p>我不仅是摄影师，也具备设计师视角，理解机构宣传、品牌内容和家长反馈的使用场景。</p>
+        </div>
+        <div class="service-list">
+          <div><span>Half-day Field Trip</span><strong>半日研学活动拍摄</strong></div>
+          <div><span>Full-day Outdoor Program</span><strong>全天户外课程记录</strong></div>
+          <div><span>Camp & Seasonal Activities</span><strong>营地与四季主题活动跟拍</strong></div>
+          <div><span>Organization Visual Materials</span><strong>机构宣传素材拍摄</strong></div>
+          <div><span>Content Delivery</span><strong>精选修图与成套交付</strong></div>
+          <div><span>Brand-aware Photography</span><strong>兼顾品牌传播的影像视角</strong></div>
+        </div>
+      </section>
+
+      <section class="section-pad section about" id="about">
+        <figure class="about-image image-frame">
+          <!-- About image: replace assets/images/about/about.jpg with a portrait or quiet nature image. -->
+          <img src="assets/images/about/about.jpg" alt="摄影师在自然环境中工作或观察" />
+        </figure>
+        <div class="about-copy">
+          <p class="eyebrow">About</p>
+          <h2>关于我</h2>
+          <!-- Replace this copy with your personal bio if needed. -->
+          <p>
+            我是一名设计师，也是一名长期关注户外与纪实影像的摄影师。因为热爱山野、跑步和自然活动，我更习惯在真实环境中观察人与环境的关系。
+          </p>
+          <p>
+            在儿童研学拍摄中，我希望记录的不只是“孩子参加了一场活动”，而是他们在自然中探索、尝试、协作和成长的具体瞬间。
+          </p>
+          <p>
+            我的拍摄方式尽量保持低干扰，以纪实视角记录活动过程，同时兼顾机构后续宣传、家长反馈和长期内容沉淀的需要。
+          </p>
+        </div>
+      </section>
+
+      <section class="contact" id="contact">
+        <div class="contact-inner">
+          <div>
+            <p class="eyebrow">Contact</p>
+            <h2>Let’s document the next outdoor story.</h2>
+            <p>如果你正在筹备一场儿童户外研学、营地、自然探索或四季主题活动，欢迎联系我一起记录它。</p>
+          </div>
+          <div class="contact-card">
+            <!-- Replace contact details below. -->
+            <p><span>Email</span> yourname@example.com</p>
+            <p><span>WeChat</span> your-wechat-id</p>
+            <p><span>Location</span> Hangzhou / Available for travel</p>
+            <a class="button button-light" href="mailto:yourname@example.com">Start a Conversation</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="work-modal" data-work-modal aria-hidden="true">
+      <div class="work-modal-panel" role="dialog" aria-modal="true" aria-labelledby="work-modal-title">
+        <button class="modal-close" type="button" data-modal-close aria-label="Close portfolio gallery"></button>
+        <div class="work-modal-head">
+          <p class="eyebrow">Portfolio View</p>
+          <h2 id="work-modal-title" data-modal-title>Hiking / Forest Trail</h2>
+          <p data-modal-description>围绕徒步活动的完整节奏，适合放一整组从出发到返程的连续照片。</p>
+        </div>
+        <div class="work-masonry modal-masonry" data-modal-gallery aria-live="polite"></div>
+      </div>
+    </div>
+
+    <div class="season-modal" data-season-modal aria-hidden="true">
+      <div class="season-modal-panel" role="dialog" aria-modal="true" aria-labelledby="season-modal-title">
+        <button class="modal-close" type="button" data-season-modal-close aria-label="Close season gallery"></button>
+        <div class="season-modal-head">
+          <p class="eyebrow" data-season-modal-en>SPRING</p>
+          <h2 id="season-modal-title" data-season-modal-title>春季自然手记</h2>
+          <p data-season-modal-description>茶田、昆虫、新叶与第一次远足。</p>
+          <div class="tag-row" data-season-modal-tags></div>
+        </div>
+        <div class="season-masonry" data-season-modal-gallery aria-live="polite"></div>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <p>© 2026 Seasonal Field Notes. Outdoor Learning & Children Documentary Photography.</p>
+    </footer>
+
+    <div class="image-preview" data-image-preview aria-hidden="true">
+      <div class="image-preview-backdrop" data-image-preview-close data-cursor="close-preview"></div>
+      <img class="image-preview-img" data-image-preview-img data-image-preview-close data-cursor="close-preview" src="" alt="" />
+    </div>
+
+    <div class="custom-cursor is-hidden" aria-hidden="true">
+      <div class="cursor-glass"></div>
+      <div class="cursor-core"></div>
+      <div class="cursor-icon cursor-icon-arrow"></div>
+      <div class="cursor-icon cursor-icon-zoom"></div>
+      <div class="cursor-icon cursor-icon-drag"></div>
+      <div class="cursor-icon cursor-icon-close-preview"></div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
