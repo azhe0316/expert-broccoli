@@ -24,16 +24,43 @@ const seasonModalTags = document.querySelector("[data-season-modal-tags]");
 const seasonModalGallery = document.querySelector("[data-season-modal-gallery]");
 const seasonModalClose = document.querySelector("[data-season-modal-close]");
 const masonryRhythms = ["is-landscape", "is-portrait", "is-square", "is-portrait", "is-landscape", "is-square"];
+const heroScrollIndicator = document.querySelector("[data-hero-scroll]");
 
 const customCursor = document.querySelector(".custom-cursor");
 const imagePreview = document.querySelector("[data-image-preview]");
 const imagePreviewImg = document.querySelector("[data-image-preview-img]");
 const imagePreviewCloseTargets = document.querySelectorAll("[data-image-preview-close]");
 const cursorStates = ["is-hover", "is-arrow", "is-zoom", "is-drag", "is-close-preview"];
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const supportsCustomCursor =
   customCursor &&
   window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
-  !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  !prefersReducedMotion;
+const supportsTextSequence =
+  window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
+  !prefersReducedMotion;
+const textSequenceOffsets = {
+  soft: 14,
+  medium: 24,
+  strong: 38,
+  kicker: 16,
+  title: 38,
+  heading: 28,
+  body: 18,
+  copy: 22
+};
+const textSequenceInitialOpacity = 0.8;
+const textSequenceStepDelay = 0.14;
+const textSequenceMaxDelay = 0.36;
+const textSequenceDuration = 0.62;
+
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function easeOutCubic(value) {
+  return 1 - Math.pow(1 - value, 3);
+}
 
 function setupCursorTargets() {
   document.querySelectorAll("a, button, [role='button'], .button, .work-panel-button").forEach((element) => {
@@ -172,6 +199,152 @@ function initCustomCursor() {
 }
 
 initCustomCursor();
+
+function getTextSequenceOffset(element) {
+  const type = element.dataset.textStepType;
+
+  if (type === "title") {
+    return textSequenceOffsets.title;
+  }
+
+  if (type === "heading") {
+    return textSequenceOffsets.heading;
+  }
+
+  if (type === "body") {
+    return textSequenceOffsets.body;
+  }
+
+  if (element.classList.contains("eyebrow")) {
+    return textSequenceOffsets.kicker;
+  }
+
+  if (element.matches("h1, h2")) {
+    return textSequenceOffsets.strong;
+  }
+
+  if (element.matches("h3, h4")) {
+    return textSequenceOffsets.medium;
+  }
+
+  return textSequenceOffsets.copy;
+}
+
+function initTextSequence() {
+  if (!supportsTextSequence) {
+    return;
+  }
+
+  const excludedSelector =
+    ".site-header, .work-modal, .season-modal, .image-preview, .custom-cursor, [data-cursor], .site-footer";
+
+  const textSequences = Array.from(document.querySelectorAll("[data-text-sequence]"))
+    .filter((sequence) => !sequence.closest(excludedSelector))
+    .map((sequence) => {
+      const steps = Array.from(sequence.querySelectorAll("[data-text-step]"))
+        .filter((step) => !step.closest(excludedSelector) && step.closest("[data-text-sequence]") === sequence)
+        .map((element) => {
+          const offset = getTextSequenceOffset(element);
+          element.style.setProperty("--text-sequence-y", `${offset}px`);
+          element.style.setProperty("--text-sequence-opacity", textSequenceInitialOpacity);
+
+          return {
+            element,
+            offset,
+            currentY: offset,
+            targetY: offset,
+            currentOpacity: textSequenceInitialOpacity,
+            targetOpacity: textSequenceInitialOpacity
+          };
+        });
+
+      return { element: sequence, steps };
+    })
+    .filter((sequence) => sequence.steps.length);
+
+  if (!textSequences.length) {
+    return;
+  }
+
+  const visibleSequences = new Set();
+  let isTicking = false;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        const sequence = textSequences.find((candidate) => candidate.element === entry.target);
+
+        if (!sequence) {
+          return;
+        }
+
+        if (entry.isIntersecting) {
+          visibleSequences.add(sequence);
+        } else {
+          visibleSequences.delete(sequence);
+        }
+      });
+      requestTextSequenceUpdate();
+    },
+    { rootMargin: "22% 0px", threshold: 0 }
+  );
+
+  textSequences.forEach((sequence) => observer.observe(sequence.element));
+
+  function updateTextSequence() {
+    isTicking = false;
+
+    if (!visibleSequences.size) {
+      return;
+    }
+
+    const viewportHeight = window.innerHeight || 1;
+    const progressStart = viewportHeight * 0.85;
+    const progressEnd = viewportHeight * 0.42;
+    let shouldContinue = false;
+
+    visibleSequences.forEach((sequence) => {
+      const rect = sequence.element.getBoundingClientRect();
+      const moduleProgress = clamp((progressStart - rect.top) / (progressStart - progressEnd), 0, 1);
+
+      sequence.steps.forEach((step, index) => {
+        const localStart = Math.min(index * textSequenceStepDelay, textSequenceMaxDelay);
+        const localProgress = clamp((moduleProgress - localStart) / textSequenceDuration, 0, 1);
+        const eased = easeOutCubic(localProgress);
+        step.targetY = step.offset * (1 - eased);
+        step.targetOpacity = textSequenceInitialOpacity + (1 - textSequenceInitialOpacity) * eased;
+        step.currentY += (step.targetY - step.currentY) * 0.18;
+        step.currentOpacity += (step.targetOpacity - step.currentOpacity) * 0.18;
+
+        if (Math.abs(step.targetY - step.currentY) > 0.04 || Math.abs(step.targetOpacity - step.currentOpacity) > 0.002) {
+          shouldContinue = true;
+        }
+
+        step.element.style.setProperty("--text-sequence-y", `${step.currentY.toFixed(2)}px`);
+        step.element.style.setProperty("--text-sequence-opacity", step.currentOpacity.toFixed(3));
+      });
+    });
+
+    if (shouldContinue) {
+      requestTextSequenceUpdate();
+    }
+  }
+
+  function requestTextSequenceUpdate() {
+    if (isTicking) {
+      return;
+    }
+
+    isTicking = true;
+    window.requestAnimationFrame(updateTextSequence);
+  }
+
+  window.addEventListener("scroll", requestTextSequenceUpdate, { passive: true });
+  window.addEventListener("resize", requestTextSequenceUpdate);
+  requestTextSequenceUpdate();
+}
+
+initTextSequence();
 
 const workCollections = {
   // Activity gallery images are grouped by activity folder for easy replacement.
@@ -354,7 +527,17 @@ function attachImageFallbacks(scope = document) {
 
 function updateHeaderState() {
   if (header) {
-    header.classList.toggle("is-scrolled", window.scrollY > 8);
+    const workStackViewport = workStack?.querySelector(".work-stack");
+    const workStackRect = workStackViewport?.getBoundingClientRect();
+    const isWorkStackImmersive =
+      workStackRect && workStackRect.top <= 1 && workStackRect.bottom > (header.offsetHeight || 0);
+    const scrollProgress = isWorkStackImmersive ? 0 : clamp(window.scrollY / 160, 0, 1);
+
+    header.classList.toggle("is-scrolled", scrollProgress > 0.55);
+    header.style.setProperty("--header-bg-opacity", (0.62 * scrollProgress).toFixed(3));
+    header.style.setProperty("--header-border-opacity", (0.7 * scrollProgress).toFixed(3));
+    header.style.setProperty("--header-shadow-opacity", scrollProgress.toFixed(3));
+    header.style.setProperty("--header-blur", `${(22 * scrollProgress).toFixed(2)}px`);
   }
 }
 
@@ -367,6 +550,10 @@ if (navToggle) {
     navToggle.setAttribute("aria-expanded", String(isOpen));
   });
 }
+
+heroScrollIndicator?.addEventListener("click", () => {
+  document.querySelector("#seasons")?.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth" });
+});
 
 navLinks.forEach((link) => {
   link.addEventListener("click", () => {

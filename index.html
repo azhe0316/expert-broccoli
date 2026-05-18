@@ -33,13 +33,19 @@
     </header>
 
     <main id="top">
-      <section class="hero section-pad">
-        <div class="hero-copy">
-          <p class="eyebrow">Clean Editorial Nature Documentary</p>
-          <h1>Seasonal Field Notes</h1>
-          <p class="hero-subtitle">儿童户外研学纪实摄影</p>
-          <p class="hero-lead">记录孩子在四季自然里的探索、行动与成长。</p>
-          <p class="hero-en">
+      <section class="hero section-pad hero-cover">
+        <figure class="hero-image image-frame" aria-hidden="true">
+          <!-- Hero image: replace assets/images/hero/hero.jpg with your main visual. -->
+          <img src="assets/images/hero/hero.jpg" alt="" />
+          <figcaption>Outdoor learning, observed quietly.</figcaption>
+        </figure>
+        <div class="hero-overlay" aria-hidden="true"></div>
+        <div class="hero-copy" data-text-sequence>
+          <p class="eyebrow" data-text-step>Clean Editorial Nature Documentary</p>
+          <h1 data-text-step data-text-step-type="title">Seasonal Field Notes</h1>
+          <p class="hero-subtitle" data-text-step data-text-step-type="heading">儿童户外研学纪实摄影</p>
+          <p class="hero-lead" data-text-step>记录孩子在四季自然里的探索、行动与成长。</p>
+          <p class="hero-en" data-text-step>
             Documentary photography for children’s outdoor learning, from forest trails to snowy fields.
           </p>
           <div class="hero-actions">
@@ -47,11 +53,7 @@
             <a class="button button-secondary" href="#seasons">Explore Seasons</a>
           </div>
         </div>
-        <figure class="hero-image image-frame">
-          <!-- Hero image: replace assets/images/hero/hero.jpg with your main visual. -->
-          <img src="assets/images/hero/hero.jpg" alt="孩子在自然环境中进行户外研学活动" />
-          <figcaption>Outdoor learning, observed quietly.</figcaption>
-        </figure>
+        <button class="hero-scroll-indicator" type="button" data-hero-scroll data-cursor="hover" aria-label="Scroll to Four Seasons"></button>
       </section>
 
       <section class="intro-line">
@@ -62,10 +64,10 @@
       </section>
 
       <section class="section-pad section" id="seasons">
-        <div class="section-heading compact">
-          <p class="eyebrow">Four Seasons</p>
-          <h2>四季自然手记</h2>
-          <p>以季节作为内容线索，进入孩子在春、夏、秋、冬自然活动中的观察、行动与故事。</p>
+        <div class="section-heading compact" data-text-sequence>
+          <p class="eyebrow" data-text-step>Four Seasons</p>
+          <h2 data-text-step data-text-step-type="title">四季自然手记</h2>
+          <p data-text-step>以季节作为内容线索，进入孩子在春、夏、秋、冬自然活动中的观察、行动与故事。</p>
         </div>
 
         <div class="season-entry-carousel" data-season-carousel data-cursor="drag">
@@ -126,10 +128,10 @@
       </section>
 
       <section class="work-stack-section" id="work" data-work-stack>
-        <div class="work-stack-intro section-pad">
-          <p class="eyebrow">Selected Works</p>
-          <h2>活动多样性记录</h2>
-          <p>从山野徒步、茶田观察到溪流与雪地活动，以连续影像记录孩子在不同自然场景中的行动与成长。</p>
+        <div class="work-stack-intro section-pad" data-text-sequence>
+          <p class="eyebrow" data-text-step>Selected Works</p>
+          <h2 data-text-step data-text-step-type="title">活动多样性记录</h2>
+          <p data-text-step>从山野徒步、茶田观察到溪流与雪地活动，以连续影像记录孩子在不同自然场景中的行动与成长。</p>
         </div>
         <div class="work-stack">
           <article class="work-panel is-active" data-work-panel data-work-key="hiking" role="button" tabindex="0">
@@ -169,40 +171,38 @@
             </div>
           </article>
           <div class="work-stack-controls" aria-label="Selected works scroll controls">
-            <button class="work-stack-arrow work-stack-arrow-up" type="button" data-work-prev aria-label="Previous activity"></button>
             <div class="work-stack-progress" aria-hidden="true">
               <span data-work-progress></span>
             </div>
-            <button class="work-stack-arrow work-stack-arrow-down" type="button" data-work-next aria-label="Next activity"></button>
           </div>
         </div>
       </section>
 
       <section class="section-pad section" id="approach">
-        <div class="section-heading">
-          <p class="eyebrow">Approach</p>
-          <h2>拍摄方式</h2>
+        <div class="section-heading" data-text-sequence>
+          <p class="eyebrow" data-text-step>Approach</p>
+          <h2 data-text-step data-text-step-type="heading">拍摄方式</h2>
         </div>
-        <div class="approach-grid">
-          <article>
+        <div class="approach-grid" data-text-sequence>
+          <article data-text-step data-text-step-type="body">
             <span>01</span>
             <h3>Low-intervention Documentary</h3>
             <h4>低干扰纪实拍摄</h4>
             <p>尽量不打断孩子的活动状态，以观察和跟随的方式记录真实瞬间。</p>
           </article>
-          <article>
+          <article data-text-step data-text-step-type="body">
             <span>02</span>
             <h3>Story-driven Coverage</h3>
             <h4>活动叙事覆盖</h4>
             <p>从抵达、行进、观察、互动到结束，完整记录一场活动的过程，而不是只拍几张好看的照片。</p>
           </article>
-          <article>
+          <article data-text-step data-text-step-type="body">
             <span>03</span>
             <h3>Natural Color & Clean Editing</h3>
             <h4>自然色彩与干净后期</h4>
             <p>后期调色保持通透、自然、克制，让孩子的神情和环境本身成为画面重点。</p>
           </article>
-          <article>
+          <article data-text-step data-text-step-type="body">
             <span>04</span>
             <h3>For Families & Organizations</h3>
             <h4>兼顾家长反馈与机构传播</h4>
@@ -212,18 +212,18 @@
       </section>
 
       <section class="section-pad section services" id="services">
-        <div class="section-heading compact">
-          <p class="eyebrow">Services</p>
-          <h2>拍摄服务</h2>
-          <p>我不仅是摄影师，也具备设计师视角，理解机构宣传、品牌内容和家长反馈的使用场景。</p>
+        <div class="section-heading compact" data-text-sequence>
+          <p class="eyebrow" data-text-step>Services</p>
+          <h2 data-text-step data-text-step-type="heading">拍摄服务</h2>
+          <p data-text-step>我不仅是摄影师，也具备设计师视角，理解机构宣传、品牌内容和家长反馈的使用场景。</p>
         </div>
-        <div class="service-list">
-          <div><span>Half-day Field Trip</span><strong>半日研学活动拍摄</strong></div>
-          <div><span>Full-day Outdoor Program</span><strong>全天户外课程记录</strong></div>
-          <div><span>Camp & Seasonal Activities</span><strong>营地与四季主题活动跟拍</strong></div>
-          <div><span>Organization Visual Materials</span><strong>机构宣传素材拍摄</strong></div>
-          <div><span>Content Delivery</span><strong>精选修图与成套交付</strong></div>
-          <div><span>Brand-aware Photography</span><strong>兼顾品牌传播的影像视角</strong></div>
+        <div class="service-list" data-text-sequence>
+          <div data-text-step data-text-step-type="body"><span>Half-day Field Trip</span><strong>半日研学活动拍摄</strong></div>
+          <div data-text-step data-text-step-type="body"><span>Full-day Outdoor Program</span><strong>全天户外课程记录</strong></div>
+          <div data-text-step data-text-step-type="body"><span>Camp & Seasonal Activities</span><strong>营地与四季主题活动跟拍</strong></div>
+          <div data-text-step data-text-step-type="body"><span>Organization Visual Materials</span><strong>机构宣传素材拍摄</strong></div>
+          <div data-text-step data-text-step-type="body"><span>Content Delivery</span><strong>精选修图与成套交付</strong></div>
+          <div data-text-step data-text-step-type="body"><span>Brand-aware Photography</span><strong>兼顾品牌传播的影像视角</strong></div>
         </div>
       </section>
 
@@ -232,17 +232,17 @@
           <!-- About image: replace assets/images/about/about.jpg with a portrait or quiet nature image. -->
           <img src="assets/images/about/about.jpg" alt="摄影师在自然环境中工作或观察" />
         </figure>
-        <div class="about-copy">
-          <p class="eyebrow">About</p>
-          <h2>关于我</h2>
+        <div class="about-copy" data-text-sequence>
+          <p class="eyebrow" data-text-step>About</p>
+          <h2 data-text-step data-text-step-type="heading">关于我</h2>
           <!-- Replace this copy with your personal bio if needed. -->
-          <p>
+          <p data-text-step data-text-step-type="body">
             我是一名设计师，也是一名长期关注户外与纪实影像的摄影师。因为热爱山野、跑步和自然活动，我更习惯在真实环境中观察人与环境的关系。
           </p>
-          <p>
+          <p data-text-step data-text-step-type="body">
             在儿童研学拍摄中，我希望记录的不只是“孩子参加了一场活动”，而是他们在自然中探索、尝试、协作和成长的具体瞬间。
           </p>
-          <p>
+          <p data-text-step data-text-step-type="body">
             我的拍摄方式尽量保持低干扰，以纪实视角记录活动过程，同时兼顾机构后续宣传、家长反馈和长期内容沉淀的需要。
           </p>
         </div>
@@ -250,10 +250,10 @@
 
       <section class="contact" id="contact">
         <div class="contact-inner">
-          <div>
-            <p class="eyebrow">Contact</p>
-            <h2>Let’s document the next outdoor story.</h2>
-            <p>如果你正在筹备一场儿童户外研学、营地、自然探索或四季主题活动，欢迎联系我一起记录它。</p>
+          <div data-text-sequence>
+            <p class="eyebrow" data-text-step>Contact</p>
+            <h2 data-text-step data-text-step-type="heading">Let’s document the next outdoor story.</h2>
+            <p data-text-step>如果你正在筹备一场儿童户外研学、营地、自然探索或四季主题活动，欢迎联系我一起记录它。</p>
           </div>
           <div class="contact-card">
             <!-- Replace contact details below. -->
@@ -264,6 +264,7 @@
           </div>
         </div>
       </section>
+
     </main>
 
     <div class="work-modal" data-work-modal aria-hidden="true">
