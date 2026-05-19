@@ -11,6 +11,8 @@ const workPanels = Array.from(document.querySelectorAll("[data-work-panel]"));
 const workPrev = document.querySelector("[data-work-prev]");
 const workNext = document.querySelector("[data-work-next]");
 const workProgress = document.querySelector("[data-work-progress]");
+const scopeShowcase = document.querySelector("[data-scope-showcase]");
+const slideModules = Array.from(document.querySelectorAll("[data-slide-module]"));
 const workModal = document.querySelector("[data-work-modal]");
 const modalTitle = document.querySelector("[data-modal-title]");
 const modalDescription = document.querySelector("[data-modal-description]");
@@ -32,6 +34,10 @@ const imagePreviewImg = document.querySelector("[data-image-preview-img]");
 const imagePreviewCloseTargets = document.querySelectorAll("[data-image-preview-close]");
 const cursorStates = ["is-hover", "is-arrow", "is-zoom", "is-drag", "is-close-preview"];
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const supportsSlideModules =
+  window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
+  window.matchMedia("(min-width: 761px)").matches &&
+  !prefersReducedMotion;
 const supportsCustomCursor =
   customCursor &&
   window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
@@ -53,6 +59,8 @@ const textSequenceInitialOpacity = 0.8;
 const textSequenceStepDelay = 0.14;
 const textSequenceMaxDelay = 0.36;
 const textSequenceDuration = 0.62;
+let imagePreviewRequestId = 0;
+let imagePreviewCleanupTimer = 0;
 
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
@@ -346,6 +354,141 @@ function initTextSequence() {
 
 initTextSequence();
 
+function initSlideModules() {
+  if (!slideModules.length) {
+    return;
+  }
+
+  if (!supportsSlideModules) {
+    slideModules.forEach((module) => {
+      module.style.removeProperty("--slide-y");
+      module.style.removeProperty("--slide-scale");
+      module.style.removeProperty("--slide-opacity");
+    });
+    return;
+  }
+
+  const settings = {
+    pushDistance: 112,
+    incomingScale: 0.972,
+    outgoingScale: 1.018,
+    minOpacity: 0.8,
+    ease: 0.16
+  };
+  const states = slideModules.map((module, index) => {
+    module.style.setProperty("--slide-layer", index + 1);
+
+    return {
+      module,
+      currentY: 0,
+      currentScale: 1,
+      currentOpacity: 1,
+      targetY: 0,
+      targetScale: 1,
+      targetOpacity: 1
+    };
+  });
+  let isTicking = false;
+
+  function getModuleStrength(module) {
+    if (module.id === "work") {
+      return { distance: 0, scale: 0, opacity: 0 };
+    }
+
+    if (module.id === "seasons") {
+      return { distance: 0.62, scale: 0.5, opacity: 0.62 };
+    }
+
+    return { distance: 1, scale: 1, opacity: 1 };
+  }
+
+  function resetSlideModules() {
+    states.forEach((state) => {
+      state.currentY = 0;
+      state.currentScale = 1;
+      state.currentOpacity = 1;
+      state.targetY = 0;
+      state.targetScale = 1;
+      state.targetOpacity = 1;
+      state.module.style.setProperty("--slide-y", "0px");
+      state.module.style.setProperty("--slide-scale", "1");
+      state.module.style.setProperty("--slide-opacity", "1");
+    });
+  }
+
+  function updateSlideModules() {
+    isTicking = false;
+
+    if (document.body.classList.contains("modal-open")) {
+      resetSlideModules();
+      return;
+    }
+
+    const viewportHeight = window.innerHeight || 1;
+    let shouldContinue = false;
+
+    states.forEach((state) => {
+      const rect = state.module.getBoundingClientRect();
+      const isNearViewport = rect.bottom > -viewportHeight * 0.25 && rect.top < viewportHeight * 1.25;
+
+      if (!isNearViewport) {
+        state.targetY = 0;
+        state.targetScale = 1;
+        state.targetOpacity = 1;
+      } else {
+        const enterProgress = clamp((viewportHeight - rect.top) / viewportHeight, 0, 1);
+        const leaveProgress = clamp(-rect.top / viewportHeight, 0, 1);
+        const incoming = 1 - easeOutCubic(enterProgress);
+        const outgoing = easeOutCubic(leaveProgress);
+        const strength = getModuleStrength(state.module);
+        const distance = settings.pushDistance * strength.distance;
+        const incomingScaleRange = (1 - settings.incomingScale) * strength.scale;
+        const outgoingScaleRange = (settings.outgoingScale - 1) * strength.scale;
+        const opacityRange = (1 - settings.minOpacity) * strength.opacity;
+
+        state.targetY = (incoming - outgoing) * distance;
+        state.targetScale = 1 - incoming * incomingScaleRange + outgoing * outgoingScaleRange;
+        state.targetOpacity = clamp(1 - Math.max(incoming, outgoing) * opacityRange, settings.minOpacity, 1);
+      }
+
+      state.currentY += (state.targetY - state.currentY) * settings.ease;
+      state.currentScale += (state.targetScale - state.currentScale) * settings.ease;
+      state.currentOpacity += (state.targetOpacity - state.currentOpacity) * settings.ease;
+
+      if (
+        Math.abs(state.targetY - state.currentY) > 0.04 ||
+        Math.abs(state.targetScale - state.currentScale) > 0.0002 ||
+        Math.abs(state.targetOpacity - state.currentOpacity) > 0.001
+      ) {
+        shouldContinue = true;
+      }
+
+      state.module.style.setProperty("--slide-y", `${state.currentY.toFixed(2)}px`);
+      state.module.style.setProperty("--slide-scale", state.currentScale.toFixed(4));
+      state.module.style.setProperty("--slide-opacity", state.currentOpacity.toFixed(3));
+    });
+
+    if (shouldContinue) {
+      requestSlideModuleUpdate();
+    }
+  }
+
+  function requestSlideModuleUpdate() {
+    if (isTicking) {
+      return;
+    }
+
+    isTicking = true;
+    window.requestAnimationFrame(updateSlideModules);
+  }
+
+  window.addEventListener("scroll", requestSlideModuleUpdate, { passive: true });
+  window.addEventListener("resize", requestSlideModuleUpdate);
+  requestSlideModuleUpdate();
+}
+
+initSlideModules();
+
 const workCollections = {
   // Activity gallery images are grouped by activity folder for easy replacement.
   hiking: {
@@ -552,7 +695,7 @@ if (navToggle) {
 }
 
 heroScrollIndicator?.addEventListener("click", () => {
-  document.querySelector("#seasons")?.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth" });
+  document.querySelector("#scope")?.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth" });
 });
 
 navLinks.forEach((link) => {
@@ -567,28 +710,231 @@ navLinks.forEach((link) => {
 // If a local image is missing, keep the layout intact and reveal the CSS placeholder.
 attachImageFallbacks();
 
-function renderWorkCollection(key) {
-  const collection = workCollections[key];
+/**
+ * 自动渲染指定目录下所有图片到 scopeShowcase 容器
+ * @param {string} folder - 目录路径（相对于站点根目录）
+ * @param {Element} container - 用于插入 <figure> 的容器（通常为 scopeShowcase）
+ */
+function autoRenderScopeImages(folder, container) {
+  if (!container) return;
+  // 假设所有图片都在 folder 下，且文件名为 01.jpg, 02.jpg ... 或类似连续命名
+  // 需要先尝试加载所有图片直到遇到不存在的为止（如 scope-01.jpg, scope-02.jpg ...）
+  // 或者如果后端有个 images.json 可 fetch 得到文件名列表，这里假定只能前端猜测
+  // 这里假设图片为 jpg，最多尝试 100 张
+  const maxImages = 100;
+  const images = [];
+  for (let i = 1; i <= maxImages; ++i) {
+    // 文件名补零，比如 scope-01.jpg, scope-02.jpg
+    const num = i < 10 ? `0${i}` : `${i}`;
+    const src = `${folder}/scope-${num}.jpg`;
+    images.push(src);
+  }
+  // 检查哪些图片实际存在（异步）
+  const checkImage = (src) =>
+    new Promise((resolve) => {
+      const img = new window.Image();
+      img.onload = () => resolve(src);
+      img.onerror = () => resolve(null);
+      img.src = src;
+    });
+  Promise.all(images.map(checkImage)).then((results) => {
+    const validImages = results.filter(Boolean);
+    // 清空 container
+    container.innerHTML = "";
+    validImages.forEach((src, index) => {
+      // 按瀑布流节奏分配类名
+      const rhythmClass = masonryRhythms[index % masonryRhythms.length];
+      const figure = document.createElement("figure");
+      figure.className = `image-frame ${rhythmClass}`;
+      const img = document.createElement("img");
+      img.src = src;
+      img.alt = `显微镜观察照片 ${index + 1}`;
+      img.setAttribute("data-cursor", "zoom");
+      img.setAttribute("data-preview-image", "");
+      figure.appendChild(img);
+      container.appendChild(figure);
+    });
+    attachImageFallbacks(container);
+  });
+}
 
-  if (!collection || !modalGallery || !modalTitle || !modalDescription) {
+function initScopeMarquee() {
+  if (!scopeShowcase || prefersReducedMotion) {
     return;
   }
 
-  modalTitle.textContent = collection.title;
-  modalDescription.textContent = collection.description;
-  modalGallery.innerHTML = collection.items
-    .map(
-      (item, index) => `
-        <article class="work-masonry-item ${masonryRhythms[index % masonryRhythms.length]}">
-          <figure class="image-frame">
-            <img src="${item.src}" alt="${item.alt}" data-cursor="zoom" data-preview-image />
-          </figure>
-        </article>
-      `
-    )
-    .join("");
+  const rows = Array.from(scopeShowcase.querySelectorAll("[data-scope-row]"))
+    .map((row) => {
+      const track = row.querySelector("[data-scope-track]");
+      const group = row.querySelector("[data-scope-group]");
 
-  attachImageFallbacks(modalGallery);
+      if (!track || !group) {
+        return null;
+      }
+
+      const clone = group.cloneNode(true);
+      clone.setAttribute("aria-hidden", "true");
+      track.appendChild(clone);
+
+      return {
+        row,
+        track,
+        group,
+        direction: row.dataset.direction === "right" ? 1 : -1,
+        speed: Number(row.dataset.speed) || 0.3,
+        width: 0,
+        offset: 0
+      };
+    })
+    .filter(Boolean);
+
+  if (!rows.length) {
+    return;
+  }
+
+  let isVisible = false;
+  let isHovering = false;
+  let frameId = 0;
+  let lastTimestamp = 0;
+  let speedMultiplier = 1;
+  let targetMultiplier = 1;
+  let recoveryTimer = 0;
+
+  const measureRows = () => {
+    rows.forEach((item) => {
+      item.width = item.group.getBoundingClientRect().width || 1;
+      item.offset %= item.width;
+    });
+  };
+
+  const accelerate = () => {
+    if (!isVisible) {
+      return;
+    }
+
+    targetMultiplier = 2.15;
+    window.clearTimeout(recoveryTimer);
+    recoveryTimer = window.setTimeout(() => {
+      targetMultiplier = 1;
+    }, 220);
+  };
+
+  const render = (timestamp) => {
+    frameId = 0;
+
+    if (!lastTimestamp) {
+      lastTimestamp = timestamp;
+    }
+
+    const delta = Math.min(48, timestamp - lastTimestamp);
+    lastTimestamp = timestamp;
+    const hoverMultiplier = isHovering ? 0.62 : 1;
+    speedMultiplier += (targetMultiplier - speedMultiplier) * 0.075;
+
+    rows.forEach((item) => {
+      if (!item.width) {
+        return;
+      }
+
+      item.offset += item.speed * delta * speedMultiplier * hoverMultiplier;
+      item.offset %= item.width;
+
+      const x = item.direction === 1 ? item.offset - item.width : -item.offset;
+      item.track.style.transform = `translate3d(${x.toFixed(2)}px, 0, 0)`;
+    });
+
+    if (isVisible || Math.abs(speedMultiplier - 1) > 0.01) {
+      frameId = window.requestAnimationFrame(render);
+    } else {
+      lastTimestamp = 0;
+    }
+  };
+
+  const requestRender = () => {
+    if (!frameId) {
+      frameId = window.requestAnimationFrame(render);
+    }
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.target !== scopeShowcase) {
+          return;
+        }
+
+        isVisible = entry.isIntersecting;
+        requestRender();
+      });
+    },
+    { rootMargin: "18% 0px", threshold: 0 }
+  );
+
+  measureRows();
+  observer.observe(scopeShowcase);
+  scopeShowcase.addEventListener("pointerenter", () => {
+    isHovering = true;
+  });
+  scopeShowcase.addEventListener("pointerleave", () => {
+    isHovering = false;
+  });
+  window.addEventListener("wheel", accelerate, { passive: true });
+  window.addEventListener("scroll", accelerate, { passive: true });
+  window.addEventListener("resize", () => {
+    measureRows();
+    requestRender();
+  });
+}
+
+initScopeMarquee();
+
+/**
+ * 动态渲染 Work Modal 图片，顺序为左到右、上到下，仅显示实际存在的图片
+ */
+function renderWorkCollection(key) {
+  if (!modalGallery || !modalTitle || !modalDescription) {
+    return;
+  }
+  const collection = workCollections[key];
+  modalTitle.textContent = collection?.title || key;
+  modalDescription.textContent = collection?.description || "";
+  const folder = `assets/images/galleries/activities/${key}/`;
+  const maxImages = 100;
+  // 动态检测实际存在的图片
+  const images = [];
+  for (let i = 1; i <= maxImages; ++i) {
+    const num = i < 10 ? `0${i}` : `${i}`;
+    const src = `${folder}${key}-${num}.jpg`;
+    images.push({ src, alt: `${collection?.title || key} ${i}` });
+  }
+  // 检查哪些图片实际存在
+  const checkImage = (item) =>
+    new Promise((resolve) => {
+      const img = new window.Image();
+      img.onload = () => resolve(item);
+      img.onerror = () => resolve(null);
+      img.src = item.src;
+    });
+  Promise.all(images.map(checkImage)).then((results) => {
+    const validItems = results.filter(Boolean);
+    modalGallery.innerHTML = "";
+    validItems.forEach((item, index) => {
+      const rhythmClass = masonryRhythms[index % masonryRhythms.length];
+      const article = document.createElement("article");
+      article.className = `work-masonry-item ${rhythmClass}`;
+      const figure = document.createElement("figure");
+      figure.className = "image-frame";
+      const img = document.createElement("img");
+      img.src = item.src;
+      img.alt = item.alt;
+      img.setAttribute("data-cursor", "zoom");
+      img.setAttribute("data-preview-image", "");
+      figure.appendChild(img);
+      article.appendChild(figure);
+      modalGallery.appendChild(article);
+    });
+    attachImageFallbacks(modalGallery);
+  });
 }
 
 function openWorkModal(key) {
@@ -613,11 +959,11 @@ function closeWorkModal() {
   document.body.classList.remove("modal-open");
 }
 
+/**
+ * 动态渲染 Season Modal 图片，顺序为左到右、上到下，仅显示实际存在的图片
+ */
 function renderSeasonCollection(key) {
-  const collection = seasonCollections[key];
-
   if (
-    !collection ||
     !seasonModalEn ||
     !seasonModalTitle ||
     !seasonModalDescription ||
@@ -626,24 +972,46 @@ function renderSeasonCollection(key) {
   ) {
     return;
   }
-
-  seasonModalEn.textContent = collection.en;
-  seasonModalTitle.textContent = collection.title;
-  seasonModalDescription.textContent = collection.description;
-  seasonModalTags.innerHTML = collection.tags.map((tag) => `<span>${tag}</span>`).join("");
-  seasonModalGallery.innerHTML = collection.items
-    .map(
-      (src, index) => `
-        <article class="season-masonry-item ${masonryRhythms[index % masonryRhythms.length]}">
-          <figure class="image-frame">
-            <img src="${src}" alt="${collection.title}精选照片 ${index + 1}" data-cursor="zoom" data-preview-image />
-          </figure>
-        </article>
-      `
-    )
-    .join("");
-
-  attachImageFallbacks(seasonModalGallery);
+  const collection = seasonCollections[key];
+  seasonModalEn.textContent = collection?.en || key;
+  seasonModalTitle.textContent = collection?.title || key;
+  seasonModalDescription.textContent = collection?.description || "";
+  seasonModalTags.innerHTML = collection?.tags?.map((tag) => `<span>${tag}</span>`).join("") || "";
+  const folder = `assets/images/galleries/seasons/${key}/`;
+  const maxImages = 100;
+  const images = [];
+  for (let i = 1; i <= maxImages; ++i) {
+    const num = i < 10 ? `0${i}` : `${i}`;
+    const src = `${folder}${key}-${num}.jpg`;
+    images.push({ src, alt: `${collection?.title || key}精选照片 ${i}` });
+  }
+  const checkImage = (item) =>
+    new Promise((resolve) => {
+      const img = new window.Image();
+      img.onload = () => resolve(item);
+      img.onerror = () => resolve(null);
+      img.src = item.src;
+    });
+  Promise.all(images.map(checkImage)).then((results) => {
+    const validItems = results.filter(Boolean);
+    seasonModalGallery.innerHTML = "";
+    validItems.forEach((item, index) => {
+      const rhythmClass = masonryRhythms[index % masonryRhythms.length];
+      const article = document.createElement("article");
+      article.className = `season-masonry-item ${rhythmClass}`;
+      const figure = document.createElement("figure");
+      figure.className = "image-frame";
+      const img = document.createElement("img");
+      img.src = item.src;
+      img.alt = item.alt;
+      img.setAttribute("data-cursor", "zoom");
+      img.setAttribute("data-preview-image", "");
+      figure.appendChild(img);
+      article.appendChild(figure);
+      seasonModalGallery.appendChild(article);
+    });
+    attachImageFallbacks(seasonModalGallery);
+  });
 }
 
 function openSeasonModal(key) {
@@ -668,17 +1036,48 @@ function closeSeasonModal() {
   document.body.classList.remove("modal-open");
 }
 
-function openImagePreview(image) {
+async function openImagePreview(image) {
   if (!imagePreview || !imagePreviewImg || !image?.src) {
+    return;
+  }
+
+  window.clearTimeout(imagePreviewCleanupTimer);
+  const requestId = (imagePreviewRequestId += 1);
+  const previewImage = new Image();
+  previewImage.src = image.src;
+
+  try {
+    if (previewImage.decode) {
+      await previewImage.decode();
+    }
+  } catch (error) {
+    // If decoding fails, still let the existing fallback handlers deal with the image.
+  }
+
+  if (requestId !== imagePreviewRequestId) {
     return;
   }
 
   imagePreviewImg.classList.remove("is-missing");
   imagePreviewImg.removeAttribute("aria-hidden");
-  imagePreviewImg.src = image.src;
+  if (previewImage.naturalWidth && previewImage.naturalHeight) {
+    imagePreviewImg.width = previewImage.naturalWidth;
+    imagePreviewImg.height = previewImage.naturalHeight;
+  } else {
+    imagePreviewImg.removeAttribute("width");
+    imagePreviewImg.removeAttribute("height");
+  }
   imagePreviewImg.alt = image.alt || "";
-  imagePreview.classList.add("is-open");
-  imagePreview.setAttribute("aria-hidden", "false");
+  imagePreviewImg.src = image.src;
+
+  window.requestAnimationFrame(() => {
+    if (requestId !== imagePreviewRequestId) {
+      return;
+    }
+
+    imagePreview.classList.add("is-open");
+    imagePreview.setAttribute("aria-hidden", "false");
+  });
 }
 
 function closeImagePreview() {
@@ -688,8 +1087,18 @@ function closeImagePreview() {
 
   imagePreview.classList.remove("is-open");
   imagePreview.setAttribute("aria-hidden", "true");
-  imagePreviewImg.removeAttribute("src");
-  imagePreviewImg.alt = "";
+  imagePreviewRequestId += 1;
+  window.clearTimeout(imagePreviewCleanupTimer);
+  imagePreviewCleanupTimer = window.setTimeout(() => {
+    if (imagePreview.classList.contains("is-open")) {
+      return;
+    }
+
+    imagePreviewImg.removeAttribute("src");
+    imagePreviewImg.removeAttribute("width");
+    imagePreviewImg.removeAttribute("height");
+    imagePreviewImg.alt = "";
+  }, 340);
   return true;
 }
 
