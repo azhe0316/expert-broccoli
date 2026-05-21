@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
@@ -37,17 +37,12 @@
         <figure class="hero-image image-frame" aria-hidden="true">
           <!-- Hero image: replace assets/images/hero/hero.jpg with your main visual. -->
           <img src="assets/images/hero/hero.jpg" alt="" />
-          <figcaption>Outdoor learning, observed quietly.</figcaption>
         </figure>
         <div class="hero-overlay" aria-hidden="true"></div>
         <div class="hero-copy" data-text-sequence>
           <p class="eyebrow" data-text-step>Clean Editorial Nature Documentary</p>
           <h1 data-text-step data-text-step-type="title">Seasonal Field Notes</h1>
           <p class="hero-subtitle" data-text-step data-text-step-type="heading">儿童户外研学纪实摄影</p>
-          <p class="hero-lead" data-text-step>记录孩子在四季自然里的探索、行动与成长。</p>
-          <p class="hero-en" data-text-step>
-            Documentary photography for children’s outdoor learning, from forest trails to snowy fields.
-          </p>
           <div class="hero-actions">
             <a class="button button-primary" href="#work">View Work</a>
             <a class="button button-secondary" href="#seasons">Explore Seasons</a>
@@ -56,76 +51,85 @@
         <button class="hero-scroll-indicator" type="button" data-hero-scroll data-cursor="hover" aria-label="Scroll to Scope of Stories"></button>
       </section>
 
-      <section class="scope-showcase" id="scope" data-scope-showcase data-slide-module>
-        <div class="scope-heading section-pad" data-text-sequence>
-          <p class="eyebrow" data-text-step>Scope of Stories</p>
-          <h2 data-text-step data-text-step-type="heading">我所记录的活动现场</h2>
-          <p data-text-step>
-            不止于户外研学，也记录活动现场、机构内容、人物状态与真实发生的瞬间。
-          </p>
-        </div>
-
-        <div class="scope-marquee" data-scope-marquee aria-label="摄影服务范围展示">
-          <div class="scope-marquee-row" data-scope-row data-direction="left" data-speed="0.075">
-            <div class="scope-marquee-track" data-scope-track>
-              <div class="scope-marquee-group" data-scope-group>
-                <article class="scope-card" data-cursor="hover"><figure class="scope-card-image image-frame"><img src="assets/images/scope/hiking.jpg" alt="徒步 Hiking" loading="lazy" /></figure><p class="scope-card-label"><span>徒步</span><small>Hiking</small></p></article>
-                <article class="scope-card" data-cursor="hover"><figure class="scope-card-image image-frame"><img src="assets/images/scope/stream-trekking.jpg" alt="溯溪 Stream Trekking" loading="lazy" /></figure><p class="scope-card-label"><span>溯溪</span><small>Stream Trekking</small></p></article>
-                <article class="scope-card" data-cursor="hover"><figure class="scope-card-image image-frame"><img src="assets/images/scope/skiing.jpg" alt="滑雪 Skiing" loading="lazy" /></figure><p class="scope-card-label"><span>滑雪</span><small>Skiing</small></p></article>
-                <article class="scope-card" data-cursor="hover"><figure class="scope-card-image image-frame"><img src="assets/images/scope/water-rocket.jpg" alt="水火箭 Water Rocket" loading="lazy" /></figure><p class="scope-card-label"><span>水火箭</span><small>Water Rocket</small></p></article>
-                <article class="scope-card" data-cursor="hover"><figure class="scope-card-image image-frame"><img src="assets/images/scope/rice-harvesting.jpg" alt="割稻谷 Rice Harvesting" loading="lazy" /></figure><p class="scope-card-label"><span>割稻谷</span><small>Rice Harvesting</small></p></article>
-                <article class="scope-card" data-cursor="hover"><figure class="scope-card-image image-frame"><img src="assets/images/scope/lotus-root-digging.jpg" alt="挖莲藕 Lotus Root Digging" loading="lazy" /></figure><p class="scope-card-label"><span>挖莲藕</span><small>Lotus Root Digging</small></p></article>
-              </div>
-            </div>
+      <section class="scope-narrative" id="scope" data-scope-narrative>
+        <div class="scope-narrative-sticky">
+          <div class="scope-narrative-copy" data-scope-copy>
+            <p class="eyebrow">Scope of Stories</p>
+            <h2>我所记录的活动现场</h2>
+            <p>不止于户外研学，也记录活动现场、机构内容、人物状态与真实发生的瞬间。</p>
           </div>
-
-          <div class="scope-marquee-row" data-scope-row data-direction="right" data-speed="0.065">
-            <div class="scope-marquee-track" data-scope-track>
-              <div class="scope-marquee-group" data-scope-group>
-                <article class="scope-card" data-cursor="hover"><figure class="scope-card-image image-frame"><img src="assets/images/scope/camping.jpg" alt="露营 Camping" loading="lazy" /></figure><p class="scope-card-label"><span>露营</span><small>Camping</small></p></article>
-                <article class="scope-card" data-cursor="hover"><figure class="scope-card-image image-frame"><img src="assets/images/scope/group-photo.jpg" alt="大合照 Group Photo" loading="lazy" /></figure><p class="scope-card-label"><span>大合照</span><small>Group Photo</small></p></article>
-                <article class="scope-card" data-cursor="hover"><figure class="scope-card-image image-frame"><img src="assets/images/scope/conference.jpg" alt="会议摄影 Conference" loading="lazy" /></figure><p class="scope-card-label"><span>会议摄影</span><small>Conference</small></p></article>
-                <article class="scope-card" data-cursor="hover"><figure class="scope-card-image image-frame"><img src="assets/images/scope/festival-event.jpg" alt="节日活动 Festival Event" loading="lazy" /></figure><p class="scope-card-label"><span>节日活动</span><small>Festival Event</small></p></article>
-                <article class="scope-card" data-cursor="hover"><figure class="scope-card-image image-frame"><img src="assets/images/scope/insect-watching.jpg" alt="观虫 Insect Watching" loading="lazy" /></figure><p class="scope-card-label"><span>观虫</span><small>Insect Watching</small></p></article>
-                <article class="scope-card" data-cursor="hover"><figure class="scope-card-image image-frame"><img src="assets/images/scope/bee-observation.jpg" alt="蜜蜂 Bee Observation" loading="lazy" /></figure><p class="scope-card-label"><span>蜜蜂</span><small>Bee Observation</small></p></article>
-              </div>
-            </div>
-          </div>
-
-          <div class="scope-marquee-row" data-scope-row data-direction="left" data-speed="0.07">
-            <div class="scope-marquee-track" data-scope-track>
-              <div class="scope-marquee-group" data-scope-group>
-                <article class="scope-card" data-cursor="hover"><figure class="scope-card-image image-frame"><img src="assets/images/scope/tea-picking.jpg" alt="采茶叶 Tea Picking" loading="lazy" /></figure><p class="scope-card-label"><span>采茶叶</span><small>Tea Picking</small></p></article>
-                <article class="scope-card" data-cursor="hover"><figure class="scope-card-image image-frame"><img src="assets/images/scope/desert-hiking.jpg" alt="沙漠徒步 Desert Hiking" loading="lazy" /></figure><p class="scope-card-label"><span>沙漠徒步</span><small>Desert Hiking</small></p></article>
-                <article class="scope-card" data-cursor="hover"><figure class="scope-card-image image-frame"><img src="assets/images/scope/rime-watching.jpg" alt="看雾凇 Rime Watching" loading="lazy" /></figure><p class="scope-card-label"><span>看雾凇</span><small>Rime Watching</small></p></article>
-                <article class="scope-card" data-cursor="hover"><figure class="scope-card-image image-frame"><img src="assets/images/scope/boating.jpg" alt="划船 Boating" loading="lazy" /></figure><p class="scope-card-label"><span>划船</span><small>Boating</small></p></article>
-                <article class="scope-card" data-cursor="hover"><figure class="scope-card-image image-frame"><img src="assets/images/scope/cycling.jpg" alt="骑行 Cycling" loading="lazy" /></figure><p class="scope-card-label"><span>骑行</span><small>Cycling</small></p></article>
-                <article class="scope-card" data-cursor="hover"><figure class="scope-card-image image-frame"><img src="assets/images/scope/portrait.jpg" alt="人像 Portrait" loading="lazy" /></figure><p class="scope-card-label"><span>人像</span><small>Portrait</small></p></article>
-              </div>
-            </div>
-          </div>
-
-          <div class="scope-marquee-row" data-scope-row data-direction="right" data-speed="0.06">
-            <div class="scope-marquee-track" data-scope-track>
-              <div class="scope-marquee-group" data-scope-group>
-                <article class="scope-card" data-cursor="hover"><figure class="scope-card-image image-frame"><img src="assets/images/scope/nature-class.jpg" alt="自然课堂 Nature Class" loading="lazy" /></figure><p class="scope-card-label"><span>自然课堂</span><small>Nature Class</small></p></article>
-                <article class="scope-card" data-cursor="hover"><figure class="scope-card-image image-frame"><img src="assets/images/scope/family-activity.jpg" alt="亲子活动 Family Activity" loading="lazy" /></figure><p class="scope-card-label"><span>亲子活动</span><small>Family Activity</small></p></article>
-                <article class="scope-card" data-cursor="hover"><figure class="scope-card-image image-frame"><img src="assets/images/scope/camp-activity.jpg" alt="营地活动 Camp Activity" loading="lazy" /></figure><p class="scope-card-label"><span>营地活动</span><small>Camp Activity</small></p></article>
-                <article class="scope-card" data-cursor="hover"><figure class="scope-card-image image-frame"><img src="assets/images/scope/farm-work.jpg" alt="农事体验 Farm Work" loading="lazy" /></figure><p class="scope-card-label"><span>农事体验</span><small>Farm Work</small></p></article>
-                <article class="scope-card" data-cursor="hover"><figure class="scope-card-image image-frame"><img src="assets/images/scope/teamwork.jpg" alt="团队协作 Teamwork" loading="lazy" /></figure><p class="scope-card-label"><span>团队协作</span><small>Teamwork</small></p></article>
-                <article class="scope-card" data-cursor="hover"><figure class="scope-card-image image-frame"><img src="assets/images/scope/outdoor-learning.jpg" alt="户外课程 Outdoor Learning" loading="lazy" /></figure><p class="scope-card-label"><span>户外课程</span><small>Outdoor Learning</small></p></article>
-              </div>
-            </div>
+          <div class="scope-burst-layer" aria-hidden="true">
+            <figure class="scope-burst-card image-frame" data-scope-burst-card data-cursor="hover" style="--scope-x: -32vw; --scope-y: -18vh; --scope-rotate: -3.5deg; --scope-width: 220px; --scope-ratio: 1.28;">
+              <img src="assets/images/scope/hiking.jpg" alt="徒步 Hiking" loading="lazy" />
+            </figure>
+            <figure class="scope-burst-card image-frame" data-scope-burst-card data-cursor="hover" style="--scope-x: 26vw; --scope-y: -20vh; --scope-rotate: 3deg; --scope-width: 190px; --scope-ratio: 1.2;">
+              <img src="assets/images/scope/stream-trekking.jpg" alt="溯溪 Stream Trekking" loading="lazy" />
+            </figure>
+            <figure class="scope-burst-card image-frame" data-scope-burst-card data-cursor="hover" style="--scope-x: -38vw; --scope-y: 4vh; --scope-rotate: 2.5deg; --scope-width: 170px; --scope-ratio: 1.38;">
+              <img src="assets/images/scope/skiing.jpg" alt="滑雪 Skiing" loading="lazy" />
+            </figure>
+            <figure class="scope-burst-card image-frame" data-scope-burst-card data-cursor="hover" style="--scope-x: 42vw; --scope-y: 8vh; --scope-rotate: -2deg; --scope-width: 230px; --scope-ratio: 1.44;">
+              <img src="assets/images/scope/rice-harvesting.jpg" alt="割稻谷 Rice Harvesting" loading="lazy" />
+            </figure>
+            <figure class="scope-burst-card image-frame" data-scope-burst-card data-cursor="hover" style="--scope-x: -30vw; --scope-y: 29vh; --scope-rotate: -1.5deg; --scope-width: 180px; --scope-ratio: 1.22;">
+              <img src="assets/images/scope/lotus-root-digging.jpg" alt="挖莲藕 Lotus Root Digging" loading="lazy" />
+            </figure>
+            <figure class="scope-burst-card image-frame" data-scope-burst-card data-cursor="hover" style="--scope-x: 30vw; --scope-y: 24vh; --scope-rotate: 3.5deg; --scope-width: 205px; --scope-ratio: 1.34;">
+              <img src="assets/images/scope/camping.jpg" alt="露营 Camping" loading="lazy" />
+            </figure>
+            <figure class="scope-burst-card image-frame" data-scope-burst-card data-cursor="hover" style="--scope-x: -8vw; --scope-y: -30vh; --scope-rotate: 1.5deg; --scope-width: 155px; --scope-ratio: 1.18;">
+              <img src="assets/images/scope/insect-watching.jpg" alt="观虫 Insect Watching" loading="lazy" />
+            </figure>
+            <figure class="scope-burst-card image-frame" data-scope-burst-card data-cursor="hover" style="--scope-x: 10vw; --scope-y: 30vh; --scope-rotate: -3deg; --scope-width: 250px; --scope-ratio: 1.5;">
+              <img src="assets/images/scope/tea-picking.jpg" alt="采茶叶 Tea Picking" loading="lazy" />
+            </figure>
           </div>
         </div>
       </section>
 
-      <section class="intro-line">
-        <p>
-          For forest trails, stream crossings, field studies and winter camps. A quiet archive of movement,
-          weather, attention and growth.
-        </p>
-      </section>
+      <div class="activity-reveal-stage" data-activity-reveal>
+        <section class="work-stack-section" id="work" data-work-stack data-slide-module>
+          <div class="work-stack">
+          <article class="work-panel is-active" data-work-panel data-work-key="hiking" role="button" tabindex="0">
+            <figure class="image-frame"><img src="assets/images/activities/hiking-cover.jpg" alt="山野徒步中的儿童研学纪实摄影" /></figure>
+            <div class="work-panel-copy">
+              <h2>Hiking / Forest Trail</h2>
+              <p>步道、队伍节奏、抵达与途中观察。</p>
+              <span class="work-panel-button">查看照片</span>
+            </div>
+          </article>
+          <article class="work-panel" data-work-panel data-work-key="stream" role="button" tabindex="0">
+            <figure class="image-frame"><img src="assets/images/activities/stream-trekking-cover.jpg" alt="溪流溯溪活动中的儿童户外摄影" /></figure>
+            <div class="work-panel-copy">
+              <h2>Stream Trekking</h2>
+              <p>湿透的鞋、石头之间的判断和夏季水线。</p>
+              <span class="work-panel-button">查看照片</span>
+            </div>
+          </article>
+          <article class="work-panel" data-work-panel data-work-key="tea" role="button" tabindex="0">
+            <figure class="image-frame"><img src="assets/images/activities/tea-picking-cover.jpg" alt="孩子在茶田中采茶" /></figure>
+            <div class="work-panel-copy">
+              <h2>Tea Picking</h2>
+              <p>茶田里的手势、气味、坡地和春天的工作感。</p>
+              <span class="work-panel-button">查看照片</span>
+            </div>
+          </article>
+          <article class="work-panel" data-work-panel data-work-key="lotus" role="button" tabindex="0">
+            <figure class="image-frame"><img src="assets/images/activities/lotus-root-digging-cover.jpg" alt="孩子在泥土中挖藕和田野研学" /></figure>
+            <div class="work-panel-copy">
+              <h2>Lotus Root Digging</h2>
+              <p>泥土、协作、挖掘和丰收之前的身体经验。</p>
+              <span class="work-panel-button">查看照片</span>
+            </div>
+          </article>
+          <div class="work-stack-controls" aria-label="Selected works scroll controls">
+            <div class="work-stack-progress" aria-hidden="true">
+              <span data-work-progress></span>
+            </div>
+          </div>
+          </div>
+        </section>
+      </div>
 
       <section class="section-pad section" id="seasons" data-slide-module>
         <div class="section-heading compact" data-text-sequence>
@@ -187,57 +191,6 @@
             </div>
             <button class="season-arrow season-arrow-prev" type="button" data-season-prev aria-label="Previous season"></button>
             <button class="season-arrow season-arrow-next" type="button" data-season-next aria-label="Next season"></button>
-          </div>
-        </div>
-      </section>
-
-      <section class="work-stack-section" id="work" data-work-stack data-slide-module>
-        <div class="work-stack-intro section-pad" data-text-sequence>
-          <p class="eyebrow" data-text-step>Selected Works</p>
-          <h2 data-text-step data-text-step-type="title">活动多样性记录</h2>
-          <p data-text-step>从山野徒步、茶田观察到溪流与雪地活动，以连续影像记录孩子在不同自然场景中的行动与成长。</p>
-        </div>
-        <div class="work-stack">
-          <article class="work-panel is-active" data-work-panel data-work-key="hiking" role="button" tabindex="0">
-            <figure class="image-frame"><img src="assets/images/activities/hiking-cover.jpg" alt="山野徒步中的儿童研学纪实摄影" /></figure>
-            <div class="work-panel-copy">
-              <p class="eyebrow">Selected Works</p>
-              <h2>Hiking / Forest Trail</h2>
-              <p>步道、队伍节奏、抵达与途中观察。</p>
-              <span class="work-panel-button">查看照片</span>
-            </div>
-          </article>
-          <article class="work-panel" data-work-panel data-work-key="stream" role="button" tabindex="0">
-            <figure class="image-frame"><img src="assets/images/activities/stream-trekking-cover.jpg" alt="溪流溯溪活动中的儿童户外摄影" /></figure>
-            <div class="work-panel-copy">
-              <p class="eyebrow">Selected Works</p>
-              <h2>Stream Trekking</h2>
-              <p>湿透的鞋、石头之间的判断和夏季水线。</p>
-              <span class="work-panel-button">查看照片</span>
-            </div>
-          </article>
-          <article class="work-panel" data-work-panel data-work-key="tea" role="button" tabindex="0">
-            <figure class="image-frame"><img src="assets/images/activities/tea-picking-cover.jpg" alt="孩子在茶田中采茶" /></figure>
-            <div class="work-panel-copy">
-              <p class="eyebrow">Selected Works</p>
-              <h2>Tea Picking</h2>
-              <p>茶田里的手势、气味、坡地和春天的工作感。</p>
-              <span class="work-panel-button">查看照片</span>
-            </div>
-          </article>
-          <article class="work-panel" data-work-panel data-work-key="lotus" role="button" tabindex="0">
-            <figure class="image-frame"><img src="assets/images/activities/lotus-root-digging-cover.jpg" alt="孩子在泥土中挖藕和田野研学" /></figure>
-            <div class="work-panel-copy">
-              <p class="eyebrow">Selected Works</p>
-              <h2>Lotus Root Digging</h2>
-              <p>泥土、协作、挖掘和丰收之前的身体经验。</p>
-              <span class="work-panel-button">查看照片</span>
-            </div>
-          </article>
-          <div class="work-stack-controls" aria-label="Selected works scroll controls">
-            <div class="work-stack-progress" aria-hidden="true">
-              <span data-work-progress></span>
-            </div>
           </div>
         </div>
       </section>
@@ -359,6 +312,8 @@
     <footer class="site-footer">
       <p>© 2026 Seasonal Field Notes. Outdoor Learning & Children Documentary Photography.</p>
     </footer>
+
+    <div class="site-grain" aria-hidden="true"></div>
 
     <div class="image-preview" data-image-preview aria-hidden="true">
       <div class="image-preview-backdrop" data-image-preview-close data-cursor="close-preview"></div>

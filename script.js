@@ -11,7 +11,8 @@ const workPanels = Array.from(document.querySelectorAll("[data-work-panel]"));
 const workPrev = document.querySelector("[data-work-prev]");
 const workNext = document.querySelector("[data-work-next]");
 const workProgress = document.querySelector("[data-work-progress]");
-const scopeShowcase = document.querySelector("[data-scope-showcase]");
+const scopeNarrative = document.querySelector("[data-scope-narrative]");
+const activityReveal = document.querySelector("[data-activity-reveal]");
 const slideModules = Array.from(document.querySelectorAll("[data-slide-module]"));
 const workModal = document.querySelector("[data-work-modal]");
 const modalTitle = document.querySelector("[data-modal-title]");
@@ -45,6 +46,11 @@ const supportsCustomCursor =
 const supportsTextSequence =
   window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
   !prefersReducedMotion;
+const supportsScopeNarrative =
+  scopeNarrative &&
+  window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
+  window.matchMedia("(min-width: 901px)").matches &&
+  !prefersReducedMotion;
 const textSequenceOffsets = {
   soft: 14,
   medium: 24,
@@ -68,6 +74,34 @@ function clamp(value, min, max) {
 
 function easeOutCubic(value) {
   return 1 - Math.pow(1 - value, 3);
+}
+
+function easeInOutCubic(value) {
+  return value < 0.5 ? 4 * value * value * value : 1 - Math.pow(-2 * value + 2, 3) / 2;
+}
+
+function getDocumentTop(element) {
+  if (!element) {
+    return 0;
+  }
+
+  let top = 0;
+  let node = element;
+
+  while (node) {
+    top += node.offsetTop || 0;
+    node = node.offsetParent;
+  }
+
+  return top;
+}
+
+function getActivityRevealStart() {
+  if (scopeNarrative && activityReveal && supportsScopeNarrative) {
+    return scopeNarrative.offsetTop + scopeNarrative.offsetHeight - window.innerHeight;
+  }
+
+  return getDocumentTop(activityReveal || workStack);
 }
 
 function setupCursorTargets() {
@@ -710,183 +744,159 @@ navLinks.forEach((link) => {
 // If a local image is missing, keep the layout intact and reveal the CSS placeholder.
 attachImageFallbacks();
 
-/**
- * 自动渲染指定目录下所有图片到 scopeShowcase 容器
- * @param {string} folder - 目录路径（相对于站点根目录）
- * @param {Element} container - 用于插入 <figure> 的容器（通常为 scopeShowcase）
- */
-function autoRenderScopeImages(folder, container) {
-  if (!container) return;
-  // 假设所有图片都在 folder 下，且文件名为 01.jpg, 02.jpg ... 或类似连续命名
-  // 需要先尝试加载所有图片直到遇到不存在的为止（如 scope-01.jpg, scope-02.jpg ...）
-  // 或者如果后端有个 images.json 可 fetch 得到文件名列表，这里假定只能前端猜测
-  // 这里假设图片为 jpg，最多尝试 100 张
-  const maxImages = 100;
-  const images = [];
-  for (let i = 1; i <= maxImages; ++i) {
-    // 文件名补零，比如 scope-01.jpg, scope-02.jpg
-    const num = i < 10 ? `0${i}` : `${i}`;
-    const src = `${folder}/scope-${num}.jpg`;
-    images.push(src);
+function parseViewportValue(value, axis) {
+  const rawValue = String(value || "0").trim();
+  const number = Number.parseFloat(rawValue);
+
+  if (!Number.isFinite(number)) {
+    return 0;
   }
-  // 检查哪些图片实际存在（异步）
-  const checkImage = (src) =>
-    new Promise((resolve) => {
-      const img = new window.Image();
-      img.onload = () => resolve(src);
-      img.onerror = () => resolve(null);
-      img.src = src;
-    });
-  Promise.all(images.map(checkImage)).then((results) => {
-    const validImages = results.filter(Boolean);
-    // 清空 container
-    container.innerHTML = "";
-    validImages.forEach((src, index) => {
-      // 按瀑布流节奏分配类名
-      const rhythmClass = masonryRhythms[index % masonryRhythms.length];
-      const figure = document.createElement("figure");
-      figure.className = `image-frame ${rhythmClass}`;
-      const img = document.createElement("img");
-      img.src = src;
-      img.alt = `显微镜观察照片 ${index + 1}`;
-      img.setAttribute("data-cursor", "zoom");
-      img.setAttribute("data-preview-image", "");
-      figure.appendChild(img);
-      container.appendChild(figure);
-    });
-    attachImageFallbacks(container);
-  });
+
+  if (rawValue.endsWith("vw")) {
+    return (window.innerWidth * number) / 100;
+  }
+
+  if (rawValue.endsWith("vh") || rawValue.endsWith("svh")) {
+    return (window.innerHeight * number) / 100;
+  }
+
+  if (rawValue.endsWith("%")) {
+    const base = axis === "y" ? window.innerHeight : window.innerWidth;
+    return (base * number) / 100;
+  }
+
+  return number;
 }
 
-function initScopeMarquee() {
-  if (!scopeShowcase || prefersReducedMotion) {
+function initScopeNarrative() {
+  if (!scopeNarrative) {
     return;
   }
 
-  const rows = Array.from(scopeShowcase.querySelectorAll("[data-scope-row]"))
-    .map((row) => {
-      const track = row.querySelector("[data-scope-track]");
-      const group = row.querySelector("[data-scope-group]");
+  const copy = scopeNarrative.querySelector("[data-scope-copy]");
+  const cards = Array.from(scopeNarrative.querySelectorAll("[data-scope-burst-card]")).map((card, index) => {
+    const style = window.getComputedStyle(card);
+    return {
+      element: card,
+      start: 0.12 + index * 0.08,
+      duration: 0.32,
+      x: parseViewportValue(style.getPropertyValue("--scope-x"), "x"),
+      y: parseViewportValue(style.getPropertyValue("--scope-y"), "y"),
+      rotate: Number.parseFloat(style.getPropertyValue("--scope-rotate")) || 0
+    };
+  });
 
-      if (!track || !group) {
-        return null;
-      }
-
-      const clone = group.cloneNode(true);
-      clone.setAttribute("aria-hidden", "true");
-      track.appendChild(clone);
-
-      return {
-        row,
-        track,
-        group,
-        direction: row.dataset.direction === "right" ? 1 : -1,
-        speed: Number(row.dataset.speed) || 0.3,
-        width: 0,
-        offset: 0
-      };
-    })
-    .filter(Boolean);
-
-  if (!rows.length) {
+  if (!copy || !cards.length) {
     return;
   }
 
-  let isVisible = false;
-  let isHovering = false;
-  let frameId = 0;
-  let lastTimestamp = 0;
-  let speedMultiplier = 1;
-  let targetMultiplier = 1;
-  let recoveryTimer = 0;
-
-  const measureRows = () => {
-    rows.forEach((item) => {
-      item.width = item.group.getBoundingClientRect().width || 1;
-      item.offset %= item.width;
+  const setStaticState = () => {
+    copy.style.setProperty("--scope-copy-opacity", "1");
+    copy.style.setProperty("--scope-copy-y", "0px");
+    copy.style.setProperty("--scope-copy-scale", "1");
+    activityReveal?.style.setProperty("--activity-opacity", "1");
+    activityReveal?.style.setProperty("--activity-scale", "1");
+    activityReveal?.style.setProperty("--activity-lift", "0px");
+    activityReveal?.style.setProperty("--activity-radius", "0px");
+    activityReveal?.classList.add("is-revealed");
+    activityReveal?.classList.add("is-native");
+    activityReveal?.classList.add("is-text-ready");
+    cards.forEach(({ element }) => {
+      element.style.opacity = "1";
+      element.style.filter = "none";
+      element.style.transform = "none";
     });
   };
 
-  const accelerate = () => {
-    if (!isVisible) {
-      return;
-    }
+  if (!supportsScopeNarrative) {
+    setStaticState();
+    return;
+  }
 
-    targetMultiplier = 2.15;
-    window.clearTimeout(recoveryTimer);
-    recoveryTimer = window.setTimeout(() => {
-      targetMultiplier = 1;
-    }, 220);
-  };
+  let frameId = 0;
 
-  const render = (timestamp) => {
+  const update = () => {
     frameId = 0;
 
-    if (!lastTimestamp) {
-      lastTimestamp = timestamp;
-    }
+    const rect = scopeNarrative.getBoundingClientRect();
+    const total = Math.max(1, scopeNarrative.offsetHeight - window.innerHeight);
+    const progress = clamp(-rect.top / total, 0, 1);
+    const copyProgress = easeOutCubic(clamp(progress / 0.12, 0, 1));
+    const copyExit = easeInOutCubic(clamp((progress - 0.74) / 0.16, 0, 1));
+    const activityRevealStart = 0.78;
+    const activityRevealDuration = 0.22;
+    const activityLocalProgress = clamp((progress - activityRevealStart) / activityRevealDuration, 0, 1);
+    const activityProgress = easeInOutCubic(activityLocalProgress);
+    const activityOpacity = easeOutCubic(clamp((activityLocalProgress - 0.02) / 0.82, 0, 1));
+    const activityTextProgress = easeOutCubic(clamp((progress - 0.93) / 0.07, 0, 1));
+    const activityLayoutTop = activityReveal ? getActivityRevealStart() - window.scrollY : 0;
+    const isActivityNative = activityReveal ? activityLayoutTop <= 1 : false;
+    const activityLift = activityReveal && activityLayoutTop > 0 ? -activityLayoutTop * activityProgress : 0;
+    const activityScale = 0.14 + 0.86 * activityProgress;
+    const activityRadius = 46 * (1 - activityProgress);
 
-    const delta = Math.min(48, timestamp - lastTimestamp);
-    lastTimestamp = timestamp;
-    const hoverMultiplier = isHovering ? 0.62 : 1;
-    speedMultiplier += (targetMultiplier - speedMultiplier) * 0.075;
+    copy.style.setProperty("--scope-copy-opacity", (copyProgress * (1 - copyExit * 0.62)).toFixed(3));
+    copy.style.setProperty("--scope-copy-y", `${(24 * (1 - copyProgress) - 16 * copyExit).toFixed(2)}px`);
+    copy.style.setProperty("--scope-copy-scale", (0.98 + 0.02 * copyProgress - 0.035 * copyExit).toFixed(3));
 
-    rows.forEach((item) => {
-      if (!item.width) {
-        return;
+    if (activityReveal) {
+      if (isActivityNative) {
+        activityReveal.style.setProperty("--activity-opacity", "1");
+        activityReveal.style.setProperty("--activity-scale", "1");
+        activityReveal.style.setProperty("--activity-lift", "0px");
+        activityReveal.style.setProperty("--activity-radius", "0px");
+      } else {
+        activityReveal.style.setProperty("--activity-opacity", activityOpacity.toFixed(3));
+        activityReveal.style.setProperty("--activity-scale", activityScale.toFixed(3));
+        activityReveal.style.setProperty("--activity-lift", `${activityLift.toFixed(2)}px`);
+        activityReveal.style.setProperty("--activity-radius", `${activityRadius.toFixed(2)}px`);
       }
 
-      item.offset += item.speed * delta * speedMultiplier * hoverMultiplier;
-      item.offset %= item.width;
+      activityReveal.classList.toggle("is-text-ready", activityTextProgress > 0.02);
+      activityReveal.classList.toggle("is-native", isActivityNative);
+      activityReveal.classList.toggle("is-revealed", isActivityNative && activityTextProgress > 0.985);
+    }
 
-      const x = item.direction === 1 ? item.offset - item.width : -item.offset;
-      item.track.style.transform = `translate3d(${x.toFixed(2)}px, 0, 0)`;
+    cards.forEach(({ element, start, duration, x, y, rotate }) => {
+      const local = clamp((progress - start) / duration, 0, 1);
+      const appear = easeOutCubic(local);
+      const opacityProgress = easeOutCubic(clamp((local - 0.08) / 0.72, 0, 1));
+      const exit = easeInOutCubic(clamp((progress - 0.78) / 0.16, 0, 1));
+      const drift = exit * 0.16;
+      const opacity = opacityProgress * (1 - exit * 0.72);
+      const scale = 0.62 + 0.38 * appear - 0.08 * exit;
+      const tx = x * (appear + drift);
+      const ty = y * (appear + drift);
+      const tilt = rotate * appear;
+
+      element.style.opacity = opacity.toFixed(3);
+      element.style.filter = `saturate(0.92) blur(${(exit * 1.2).toFixed(2)}px)`;
+      element.style.transform = `translate3d(calc(-50% + ${tx.toFixed(2)}px), calc(-50% + ${ty.toFixed(2)}px), 0) rotate(${tilt.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
     });
-
-    if (isVisible || Math.abs(speedMultiplier - 1) > 0.01) {
-      frameId = window.requestAnimationFrame(render);
-    } else {
-      lastTimestamp = 0;
-    }
   };
 
-  const requestRender = () => {
+  const requestUpdate = () => {
     if (!frameId) {
-      frameId = window.requestAnimationFrame(render);
+      frameId = window.requestAnimationFrame(update);
     }
   };
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.target !== scopeShowcase) {
-          return;
-        }
-
-        isVisible = entry.isIntersecting;
-        requestRender();
-      });
-    },
-    { rootMargin: "18% 0px", threshold: 0 }
-  );
-
-  measureRows();
-  observer.observe(scopeShowcase);
-  scopeShowcase.addEventListener("pointerenter", () => {
-    isHovering = true;
-  });
-  scopeShowcase.addEventListener("pointerleave", () => {
-    isHovering = false;
-  });
-  window.addEventListener("wheel", accelerate, { passive: true });
-  window.addEventListener("scroll", accelerate, { passive: true });
+  window.addEventListener("scroll", requestUpdate, { passive: true });
   window.addEventListener("resize", () => {
-    measureRows();
-    requestRender();
+    cards.forEach((card, index) => {
+      const style = window.getComputedStyle(card.element);
+      card.start = 0.12 + index * 0.08;
+      card.x = parseViewportValue(style.getPropertyValue("--scope-x"), "x");
+      card.y = parseViewportValue(style.getPropertyValue("--scope-y"), "y");
+      card.rotate = Number.parseFloat(style.getPropertyValue("--scope-rotate")) || 0;
+    });
+    requestUpdate();
   });
+
+  requestUpdate();
 }
 
-initScopeMarquee();
+initScopeNarrative();
 
 /**
  * 动态渲染 Work Modal 图片，顺序为左到右、上到下，仅显示实际存在的图片
@@ -1353,10 +1363,10 @@ function updateWorkPanelFromScroll() {
 
   const section = workStack;
   const stackViewport = workStack.querySelector(".work-stack") || workStack;
-  const rect = section.getBoundingClientRect();
+  const sectionTop = getActivityRevealStart();
   const stackHeight = stackViewport.offsetHeight;
   const scrollRange = Math.max(1, section.offsetHeight - stackHeight);
-  const progress = Math.min(Math.max(-rect.top / scrollRange, 0), 1);
+  const progress = Math.min(Math.max((window.scrollY - sectionTop) / scrollRange, 0), 1);
   const nextIndex = Math.round(progress * (workPanels.length - 1));
 
   showWorkPanel(nextIndex);
@@ -1380,7 +1390,7 @@ function scrollToWorkPanel(index) {
   const nextIndex = getWrappedIndex(index, workPanels.length);
   const scrollRange = Math.max(1, workStack.offsetHeight - stackViewport.offsetHeight);
   const progress = workPanels.length > 1 ? nextIndex / (workPanels.length - 1) : 0;
-  const targetTop = window.scrollY + workStack.getBoundingClientRect().top + scrollRange * progress;
+  const targetTop = getActivityRevealStart() + scrollRange * progress;
 
   window.scrollTo({
     top: targetTop,

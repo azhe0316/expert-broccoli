@@ -29,8 +29,8 @@
 
 1. `Hero` 首页主视觉
 2. `Scope Showcase / 摄影服务范围展示`
-3. `Four Seasons / 四季自然手记`
-4. `Activity Diversity / 活动多样性`
+3. `Activity Diversity / 活动多样性`
+4. `Four Seasons / 四季自然手记`
 5. `Approach / 拍摄方式`
 6. `Services / 服务内容`
 7. `About / 关于我`
@@ -54,8 +54,8 @@
 
 - `Hero` 首页主视觉
 - `Scope Showcase / 摄影服务范围展示`
-- `Four Seasons / 四季自然手记`
 - `Activity Diversity / 活动多样性`
+- `Four Seasons / 四季自然手记`
 - `Approach / 拍摄方式`
 - `Services / 服务内容`
 - `About / 关于我`
@@ -65,7 +65,8 @@
 
 当前已实现的关键交互：
 
-- `Scope Showcase / 摄影服务范围展示` 模块位于 Hero 后，使用四排自动横向轮播小图展示拍摄场景广度。
+- `Scope Showcase / 摄影服务范围展示` 模块位于 Hero 后，当前是 scroll-driven sticky narrative 动画模块，不再是四排自动横向轮播小图。
+- `Scope Showcase` 中心文字先入场，8 张活动现场图片从中心附近依次向外发散；第 9 个承接内容是现有 `Activity Diversity / 活动多样性` 模块本身。
 - `Four Seasons / 四季自然手记` 模块可通过季节卡片 / 图片进入对应季节弹窗。
 - `Activity Diversity / 活动多样性` 模块可通过活动卡片进入对应活动弹窗。
 - 四季弹窗和活动弹窗内部使用瀑布流图片展示。
@@ -101,7 +102,7 @@
 
 `Scope Showcase / 摄影服务范围展示` 是 Hero 后的第二屏模块。
 
-模块目的：用于快速展示摄影服务覆盖范围的广度，让用户感受到拍摄场景不止于户外研学，也包括自然探索、会议摄影、活动纪实、节日活动、人像、大合照、机构内容和真实发生的现场。
+模块目的：用于快速展示摄影服务覆盖范围的广度，让用户感受到拍摄场景不止于户外研学，也包括自然探索、活动纪实、机构内容、人物状态和真实发生的现场。
 
 模块边界：
 
@@ -112,21 +113,44 @@
 5. 该模块不新增 `Selected Works`。
 6. 该模块不创建 `selected-works` 图片目录。
 
-当前结构：
+当前结构以代码为准：
 
-1. 顶部为标题与简短描述。
-2. 顶部标题与描述为屏幕居中的竖向排布。
-3. 下方为四排自动横向轮播小图。
-4. 四排滚动方向交错，例如第一排向左、第二排向右、第三排向左、第四排向右。
-5. 每个卡片为左图右文结构，图片约 `104px × 104px`，文字分两行：中文约 `16px`，英文约 `28px`。
-6. 轮播行距和条目间距保持约 `40px`。
-7. 卡片可使用 `data-cursor="hover"`。
-8. 卡片不得使用 `data-cursor="arrow"` 或 `data-cursor="zoom"`，避免用户误以为可打开。
-9. 未来如果要扩展点击查看功能，需要另行确认。
-10. `prefers-reduced-motion: reduce` 下轮播应静止或降级为可横向滚动列表。
-11. 默认滚动速度应保持很慢；如果调整速度，不要让四排小图变成快速信息流。
+1. 当前 `Scope Showcase` 已替换为 `scroll-driven sticky narrative` 动画模块，不再是四排自动横向轮播。
+2. 外层为高 section，内层 `.scope-narrative-sticky` 使用 `position: sticky` 定格在视口内。
+3. 模块进入视口后，中心文字 `Scope of Stories / 我所记录的活动现场` 先入场。
+4. 8 张活动现场图片从中心文字附近依次向外发散，不是同时出现。
+5. 每张图片随滚动进度改变 `opacity`、`scale`、`translate` 和轻微 `rotate`。
+6. 第 9 个承接内容不是独立图片，而是现有 `Activity Diversity / 活动多样性` 模块本身。
+7. `Activity Diversity` 会从中心出现，并逐渐放大至全屏，作为 `Scope Showcase` 的最终承接。
+8. `Scope Showcase` 图片只使用 `data-cursor="hover"`，不使用 `data-cursor="arrow"` 或 `data-cursor="zoom"`。
+9. `Scope Showcase` 图片只是视觉叙事素材，不打开弹窗，不替代 `Activity Diversity`。
+10. 移动端或 `prefers-reduced-motion: reduce` 下应降级为静态标题 + 图片网格，`Activity Diversity` 正常显示。
 
-当前初始场景标签包括：徒步、溯溪、滑雪、水火箭、割稻谷、挖莲藕、露营、大合照、会议摄影、节日活动、观虫、蜜蜂、采茶叶、沙漠徒步、看雾凇、划船、骑行、人像、自然课堂、亲子活动、营地活动、农事体验、团队协作、户外课程。
+当前前 8 张发散图片：
+
+- `hiking / 徒步`
+- `stream-trekking / 溯溪`
+- `skiing / 滑雪`
+- `rice-harvesting / 割稻谷`
+- `lotus-root-digging / 挖莲藕`
+- `camping / 露营`
+- `insect-watching / 观虫`
+- `tea-picking / 采茶叶`
+
+可扩展类目：
+
+- `bee-observation / 蜜蜂`
+- `desert-hiking / 沙漠徒步`
+- `rime-watching / 看雾凇`
+- `cycling / 骑行`
+
+图片目录仍为 `assets/images/scope/`。不要新增 `scope-09` 图片，不要把 `Activity Diversity` 截成图片，不要把 `Activity Diversity` 复制一份放进 Scope。
+
+历史实现说明：
+
+1. 旧版 `Scope Showcase` 曾使用四排自动横向轮播小图展示服务范围。
+2. 该四排 marquee 方案已经被当前 sticky narrative 方案替换。
+3. 后续不要再把文档中的四排轮播描述当作当前实现依据；若需要恢复旧方案，必须由用户明确确认。
 
 ## Activity Diversity 模块说明
 
@@ -202,12 +226,12 @@
 
 1. 大型摄影图保持直角或极轻圆角，适用于 Hero 大图、Four Seasons 大图、Activity Diversity 大图、About 大图，范围为 `0px - 2px`。
 2. 四季和活动入口卡片使用中等克制圆角，范围为 `8px - 12px`，不要超过 `14px`。
-3. `Scope Showcase / 摄影服务范围展示` 这类小图轮播 / 服务范围索引模块允许使用较大圆角，范围为 `16px - 22px`，推荐 `--radius-scope-card: 18px`。
+3. `Scope Showcase / 摄影服务范围展示` 这类小图叙事素材允许使用较大圆角，范围为 `16px - 22px`，当前发散图片以代码中的 `--radius-panel` / 具体样式为准。
 4. Modal 弹窗使用中等圆角，范围为 `16px - 18px`，不要超过 `20px`。
 5. 标签和小按钮可以使用胶囊圆角，使用 `--radius-pill: 999px`。
 6. 不要把所有图片统一改成大圆角。
 7. 不要给 Hero 大图加大圆角。
-8. 大圆角只允许用于 `Scope Showcase` 这类轻内容小图轮播 / 服务范围索引模块。
+8. 大圆角只允许用于 `Scope Showcase` 这类轻内容小图叙事素材或经用户确认的视觉承接过渡。
 9. 圆角调整不能让网站变成 SaaS 官网或 App 风。
 
 ### 设计原则
@@ -221,6 +245,24 @@
 7. 不要做成机构官网。
 8. 不要做成 SaaS 官网。
 9. 不要让 UI 抢照片本身。
+
+## Global Texture / Grain Layer / 全局纸张颗粒层
+
+当前网站允许使用一层极轻微的动态纸张颗粒 / 胶片颗粒质感层，用于增强摄影书、纸张、胶片和自然影像的统一质感。
+
+使用规则：
+
+1. 颗粒层必须非常轻，不应让用户第一眼注意到“噪点动画”。
+2. 颗粒层不得影响照片清晰度、照片色彩判断和文字可读性。
+3. 推荐透明度范围为 `0.025 - 0.055`；当前用户要求增强噪点密度、增加细碎粉末感并略微提高透明度，实际值暂定为 `--grain-opacity: 0.105`。
+4. 颗粒层必须使用 `pointer-events: none`，不能阻挡任何点击、hover、滚动或 custom cursor 状态。
+5. 颗粒层层级可以覆盖普通页面内容，但必须低于 modal、image preview 和 custom cursor。
+6. 颗粒层不得盖住或污染 modal 图片预览；如影响照片观感，优先降低 opacity 到 `0.025`。
+7. `prefers-reduced-motion: reduce` 下必须关闭动态，只保留静态极低透明颗粒或关闭。
+8. 移动端 / 触摸设备可降级为静态颗粒或关闭，避免掉帧。
+9. 不要使用强噪点、故障感、电视雪花感、电影特效感或明显闪烁。
+10. 不要使用大型 PNG / JPG 纹理文件，不要引入外部依赖、canvas、WebGL 或 npm 包。
+11. 该层只是全局质感滤镜，不是新模块，不应改变页面布局、模块顺序、文案、图片路径或任何交互逻辑。
 
 ## Web Design System / 网页设计规范
 
@@ -302,11 +344,11 @@
 
 字体风格：
 
-1. 英文标题可以使用优雅但不浮夸的 serif。
-2. 正文使用干净现代的 sans-serif。
-3. 字重不要过粗。
-4. 标题不要营销化。
-5. 通过留白、行距、图片比例和层级建立高级感，不依赖超大字号或粗字重。
+1. 当前网站不再使用衬线字体，整体切换为现代无衬线品牌字体系统。
+2. 中文主字体为 `MiSans`，英文主字体为 `Outfit`。
+3. 正文、标题、导航和标签均使用无衬线字体，不使用 `serif` fallback。
+4. 字重不要过粗，标题不要营销化。
+5. 通过留白、行距、图片比例和层级建立高级感，不依赖衬线字体、超大字号或粗字重。
 
 ### 留白和布局规范
 
@@ -365,6 +407,39 @@
 - 移动端正文需要保持可读性。
 
 高级感来自留白、行距、图片比例和层级，不来自大字号、粗字重或复杂装饰。
+
+## Typography System / 字体系统
+
+当前确认字体：
+
+- 中文主字体：`MiSans`
+- 英文主字体：`Outfit`
+
+字体加载方式：
+
+1. `MiSans` 通过本地 self-host 的 `woff2` 文件加载。
+2. `MiSans` 字体文件预期放在：
+   - `assets/fonts/MiSans-Regular.woff2`
+   - `assets/fonts/MiSans-Medium.woff2`
+   - `assets/fonts/MiSans-Semibold.woff2`
+3. `Outfit` 通过 Google Fonts 加载。
+4. `Noto Sans SC`、`PingFang SC`、`Microsoft YaHei`、`Inter`、`system-ui`、`sans-serif` 作为备用字体。
+5. 备用字体用于防止字体加载失败导致页面版式异常，不代表主视觉字体改变。
+
+字体风格定位：
+
+1. 当前网站不再使用衬线体。
+2. 不使用 `Playfair Display`。
+3. 不使用 `Cormorant Garamond`。
+4. 不使用 `Georgia`。
+5. 不使用真实 `serif` fallback。
+6. 网站字体系统从“摄影杂志衬线感”调整为“现代儿童户外摄影品牌感”。
+7. 中文使用 `MiSans`，保证现代、干净、品牌化。
+8. 英文使用 `Outfit`，保证几何、现代、清晰和轻微亲和力。
+9. 字体整体不能卡通化，不能幼稚化。
+10. 不使用儿童手写体、卡通字体、强装饰字体。
+11. 高级感来自字体克制、留白、图片比例和动效节奏，而不是衬线字体。
+12. 当前 CSS 中若保留 `--serif` 变量名，只能作为兼容旧选择器的变量名；其内容必须仍然是无衬线字体栈。
 
 ## 弹窗 Modal 规范
 
@@ -677,27 +752,17 @@ assets/images/
 │   ├── hiking.jpg
 │   ├── stream-trekking.jpg
 │   ├── skiing.jpg
-│   ├── water-rocket.jpg
 │   ├── rice-harvesting.jpg
 │   ├── lotus-root-digging.jpg
 │   ├── camping.jpg
-│   ├── group-photo.jpg
-│   ├── conference.jpg
-│   ├── festival-event.jpg
 │   ├── insect-watching.jpg
+│   └── tea-picking.jpg
+│
+│   可后续扩展：
 │   ├── bee-observation.jpg
-│   ├── tea-picking.jpg
 │   ├── desert-hiking.jpg
 │   ├── rime-watching.jpg
-│   ├── boating.jpg
-│   ├── cycling.jpg
-│   ├── portrait.jpg
-│   ├── nature-class.jpg
-│   ├── family-activity.jpg
-│   ├── camp-activity.jpg
-│   ├── farm-work.jpg
-│   ├── teamwork.jpg
-│   └── outdoor-learning.jpg
+│   └── cycling.jpg
 │
 ├── galleries/
 │   ├── seasons/
@@ -725,7 +790,7 @@ assets/images/
 - 首页主图：`hero.jpg`
 - 四季封面：`spring-cover.jpg` / `summer-cover.jpg` / `autumn-cover.jpg` / `winter-cover.jpg`
 - 活动封面：`hiking-cover.jpg` / `skiing-cover.jpg` / `insect-watching-cover.jpg` / `stream-trekking-cover.jpg` / `tea-picking-cover.jpg` / `cycling-cover.jpg` / `lotus-root-digging-cover.jpg` / `rice-harvesting-cover.jpg`
-- 摄影服务范围展示：`assets/images/scope/` 下使用对应场景 slug，例如 `water-rocket.jpg` / `group-photo.jpg` / `conference.jpg` / `outdoor-learning.jpg`
+- Scope Showcase 发散图片：`assets/images/scope/` 下使用对应活动现场 slug，例如 `hiking.jpg` / `stream-trekking.jpg` / `skiing.jpg` / `rice-harvesting.jpg` / `lotus-root-digging.jpg` / `camping.jpg` / `insect-watching.jpg` / `tea-picking.jpg`
 - 四季图库：`spring-01.jpg` / `spring-02.jpg` 等
 - 活动图库：`hiking-01.jpg` / `hiking-02.jpg` 等
 - 关于我：`about.jpg`
@@ -803,8 +868,8 @@ assets/images/
 
 1. `Hero` 首页主视觉
 2. `Scope Showcase / 摄影服务范围展示`
-3. `Four Seasons / 四季自然手记`
-4. `Activity Diversity / 活动多样性`
+3. `Activity Diversity / 活动多样性`
+4. `Four Seasons / 四季自然手记`
 5. `Approach / 拍摄方式`
 6. `Services / 服务内容`
 7. `About / 关于我`
@@ -862,16 +927,16 @@ assets/images/
 
 1. 大型摄影图保持直角或极轻圆角，适用于 Hero 大图、Four Seasons 大图、Activity Diversity 大图、About 大图，范围为 `0px - 2px`。
 2. Four Seasons 和 Activity Diversity 入口卡片使用中等克制圆角，范围为 `8px - 12px`，不要超过 `14px`。
-3. Scope Showcase 这类小图轮播 / 服务范围索引模块允许使用较大圆角，范围为 `16px - 22px`，推荐 `--radius-scope-card: 18px`。
+3. Scope Showcase 这类小图叙事素材允许使用较大圆角，范围为 `16px - 22px`，当前发散图片以代码中的 `--radius-panel` / 具体样式为准。
 4. Modal 弹窗使用中等圆角，范围为 `16px - 18px`，不要超过 `20px`。
 5. 标签和小按钮可以使用胶囊圆角，使用 `--radius-pill: 999px`。
 6. 不要把所有图片统一改成大圆角，不要给 Hero 大图加大圆角。
-7. 大圆角只允许用于 Scope Showcase 这类轻内容小图轮播 / 服务范围索引模块。
+7. 大圆角只允许用于 Scope Showcase 这类轻内容小图叙事素材或经用户确认的视觉承接过渡。
 8. 圆角调整不能让网站变成 SaaS 官网或 App 风。
 
 ### 字体与字号
 
-1. 整体字号偏小，追求高级摄影作品集和杂志目录感。
+1. 整体字号偏小，追求现代儿童户外摄影品牌感和摄影作品集的克制气质。
 2. 正文基础字号约 `14px`。
 3. 卡片正文约 `13px`。
 4. 标签 / caption / 导航约 `10px - 12px`。
@@ -879,7 +944,7 @@ assets/images/
 6. Hero 标题可以较大，但必须轻、克制。
 7. 中文正文不要低于 `13px`。
 8. 移动端正文保持可读性。
-9. 不依赖粗字重和超大营销标题建立层级，而是通过留白、行距、图片比例和排版节奏建立高级感。
+9. 不依赖衬线字体、粗字重和超大营销标题建立层级，而是通过无衬线字体克制使用、留白、行距、图片比例和排版节奏建立高级感。
 
 ### 布局与留白
 
@@ -1102,27 +1167,17 @@ assets/images/
 │   ├── hiking.jpg
 │   ├── stream-trekking.jpg
 │   ├── skiing.jpg
-│   ├── water-rocket.jpg
 │   ├── rice-harvesting.jpg
 │   ├── lotus-root-digging.jpg
 │   ├── camping.jpg
-│   ├── group-photo.jpg
-│   ├── conference.jpg
-│   ├── festival-event.jpg
 │   ├── insect-watching.jpg
+│   └── tea-picking.jpg
+│
+│   可后续扩展：
 │   ├── bee-observation.jpg
-│   ├── tea-picking.jpg
 │   ├── desert-hiking.jpg
 │   ├── rime-watching.jpg
-│   ├── boating.jpg
-│   ├── cycling.jpg
-│   ├── portrait.jpg
-│   ├── nature-class.jpg
-│   ├── family-activity.jpg
-│   ├── camp-activity.jpg
-│   ├── farm-work.jpg
-│   ├── teamwork.jpg
-│   └── outdoor-learning.jpg
+│   └── cycling.jpg
 │
 ├── galleries/
 │   ├── seasons/
@@ -1182,15 +1237,17 @@ assets/images/
 1. `Scope Showcase` 当前位于 Hero 后，是页面第二屏。
 2. 模块标题为 `Scope of Stories / 我所记录的活动现场`。
 3. 模块用途是展示摄影服务覆盖场景的广度，不是作品分类入口，不打开弹窗，不替代 `Four Seasons` 和 `Activity Diversity`。
-4. 模块内容包括户外研学、自然探索、会议摄影、活动纪实、节日活动、人像、大合照、机构内容和真实发生的现场。
-5. 模块结构为居中竖排的标题/描述和四排自动横向轮播小图；卡片为左图右文，图片约 `104px × 104px`，文字分两行，中文约 `16px`，英文约 `28px`，行距和条目间距约 `40px`。
-6. 四排滚动方向交错：第一排向左、第二排向右、第三排向左、第四排向右。
-7. 页面滚动或鼠标滚轮滑动时，轮播会短暂加速，然后自然恢复默认速度；默认速度应保持很慢，当前基础速度约为此前的一半。
-8. hover 在模块上时可略微减速，便于查看，但不完全暂停。
-9. 当前小图卡片只使用 `data-cursor="hover"`，不得使用 `data-cursor="arrow"` 或 `data-cursor="zoom"`。
-10. 当前小图卡片不提供点击弹窗功能；未来如需点击查看，必须另行确认。
-11. `prefers-reduced-motion: reduce` 下轮播静止或降级为可横向滚动列表。
-12. 图片目录为 `assets/images/scope/`，该目录只服务于 scope 模块。
+4. 模块内容包括户外研学、自然探索、活动纪实、机构内容、人物状态和真实发生的现场。
+5. 当前结构是 `section.scope-narrative#scope[data-scope-narrative]` + `.scope-narrative-sticky` + `.scope-burst-layer`。
+6. `.scope-narrative` 提供长滚动距离，`.scope-narrative-sticky` 定格在一屏内，JS 将滚动距离转换为动画 progress。
+7. 中心文字先出现；8 张 `.scope-burst-card` 图片随后从中心附近依次向外发散。
+8. 发散图片随滚动进度改变 `opacity`、`scale`、`translate` 和轻微 `rotate`。
+9. 第 9 个承接内容不是单独图片，而是现有 `Activity Diversity / 活动多样性` 模块本身。
+10. `Activity Diversity` 通过 `.activity-reveal-stage[data-activity-reveal]` 从中心出现并逐渐放大至全屏，作为 Scope 动画终点。
+11. 当前实现中 `.activity-reveal-stage` 在动画完成后会进入 `is-native` / `is-revealed` 状态，释放 `overflow`、`transform` 和 `pointer-events`，让真实 Activity work stack 接管滚动和交互。
+12. 当前小图卡片只使用 `data-cursor="hover"`，不得使用 `data-cursor="arrow"` 或 `data-cursor="zoom"`。
+13. `prefers-reduced-motion: reduce`、触摸设备或窄屏下，Scope 降级为静态标题 + 图片网格，Activity Diversity 正常显示。
+14. 图片目录为 `assets/images/scope/`，该目录只服务于 scope 模块，不与 Activity 弹窗图库混用。
 
 ### About / 关于我 当前状态
 
@@ -1217,6 +1274,31 @@ assets/images/
 5. 当前 work stack 右侧只保留竖向进度条 `.work-stack-progress`；此前上下箭头按钮已从 HTML 中移除。
 6. 进度条当前放置在整张图片画面的右侧，右侧间隙较小；以当前 CSS 的 `.work-stack-controls { right: 24px; }` 为准。
 7. 不要重新加回 work stack 的上下箭头控制，除非用户明确要求。
+8. `Activity Diversity` 当前同时承担 Scope Showcase 第 9 阶段的真实承接模块；它不是 Scope 中的一张静态图，也不是复制模块。
+9. Activity 内部原有交互原则上必须保持不变：活动卡片点击打开 modal、modal 内瀑布流图片、图片 hover zoom cursor、图片点击放大预览、Esc 关闭逻辑、custom cursor 状态和 work stack 滚动进度逻辑。
+
+### Known Issues / 已知问题
+
+1. `Scope Showcase` 与 `Activity Diversity` 的第 9 阶段承接仍属于复杂滚动叙事交互，后续若出现滚动异常，应优先检查承接外壳是否仍在影响 Activity 的真实文档流。
+2. 重点风险是 `Activity Diversity` 长期处在带 `transform`、`position: sticky`、`overflow: hidden` 或 `pointer-events: none` 的父级容器中，导致 work stack 内部滚动、面板切换或点击交互异常。
+3. `Scope Narrative` 的预留高度必须只服务于动画进度，不应制造无意义空白或让用户误以为页面被锁定。
+4. 若后续修复 Activity 滚动异常，不能通过 `wheel preventDefault`、`body overflow hidden`、全局滚动锁或外部滚动库强行解决。
+
+## Next Fix Direction / 下一步修复方向
+
+后续修复 `Scope Showcase` 与 `Activity Diversity` 承接时，必须遵循以下原则：
+
+1. 不要重写 `Activity Diversity` 内部结构。
+2. 不要复制 `Activity Diversity`。
+3. 不要把 `Activity Diversity` 做成静态图片。
+4. 不要破坏 `Activity Diversity` 的 modal、image preview、custom cursor 和 work stack 数据。
+5. 修复方向应该优先考虑：Scope Showcase 动画完成后释放 `Activity Diversity`。
+6. 避免 `Activity Diversity` 长期被包裹在 `transform` / `sticky` / `overflow: hidden` 的容器里。
+7. `Activity Diversity` 最终应回到正常文档流。
+8. `Activity Diversity` 的 sticky work stack 应继续根据自己的 section scroll progress 运行。
+9. `Scope Narrative` 的预留高度不能制造无意义空白。
+10. 如果需要做视觉承接，可以只在 `Scope Showcase` 末尾使用一个视觉过渡层，完成后让真正的 `Activity Diversity` 独立出现。
+11. 后续修复必须先输出实现计划，不要直接执行代码。
 
 ### Global Image Preview / 全局图片放大预览
 
@@ -1237,11 +1319,48 @@ assets/images/
 4. modal 内部图片 hover 使用 zoom cursor；点击图片只打开全局 image preview，不关闭 modal。
 5. modal 内文字和图片不参与顺序文字动效。
 
+### Modal Gallery Rules / 弹窗图库规则
+
+1. `Four Seasons` 和 `Activity Diversity` 弹窗内的图片根据实际文件夹中存在的图片数量显示。
+2. 不使用固定数量或硬编码数组限制前台展示。
+3. 图片排列顺序为从左到右、从上到下。
+4. 保留现有瀑布流列数和间距。
+5. 保留 hover、zoom、custom cursor、modal 和 image preview 逻辑。
+6. `Four Seasons` 和 `Activity Diversity` 共用统一 modal / gallery 交互原则；不要为单一模块另写一套独立弹窗逻辑，除非用户明确要求。
+
 ### Current Code Authority / 当前代码优先原则
 
 1. 若历史文档仍出现 `data-text-parallax`、旧位移上限或旧 Hero 描述，以当前代码中的 `data-text-sequence` / `data-text-step`、当前 CSS 和当前 JS 为准。
 2. 若旧文档提到 Activity Diversity 上下箭头，以当前 HTML 为准：work stack 当前只保留进度条，不保留上下箭头按钮。
 3. 若旧文档提到 Hero opening 大结构被回退，以当前代码为准：当前已确认的 Hero 是全屏摄影封面形式，但仍禁止恢复 Hero logo 缩放归位、全局图片视差和 bottom nav reveal。
+4. 若旧文档提到 Scope Showcase 四排自动横向轮播，以当前代码为准：当前实现是 scroll-driven sticky narrative + 8 张图片发散 + Activity Diversity 真实模块承接。
+
+## Creative Override Mode / 创意突破模式
+
+`PROJECT_CONTEXT.md` 默认用于保护当前已确认的设计系统、模块边界、图片结构和交互规则。
+
+当用户明确说明“不要被 md 限制”“允许突破常规”“进入 Creative Override Mode”或类似指令时，可以进行更大胆的高级交互探索。
+
+Creative Override Mode 可以临时突破保守动效限制，例如：
+
+1. `sticky narrative`
+2. 模块转场
+3. 滚动叙事
+4. 强视觉承接
+5. 复杂但可解释、可回退的交互动效
+
+但 Creative Override Mode 仍然不能破坏：
+
+1. `Four Seasons` modal
+2. `Activity Diversity` modal
+3. image preview
+4. custom cursor
+5. 图片资源结构
+6. 不新增 `Selected Works`
+7. 不创建 `selected-works` 文件夹
+8. 不擅自删除或重写已确认模块
+
+Creative Override Mode 下必须先输出实现计划，等待用户确认后再执行代码。所有大改必须可回退，并且完成后必须更新或注明对 `PROJECT_CONTEXT.md` 的影响。
 
 ## Reverted / Rejected Changes / 已回退或不再使用的方案
 
@@ -1271,7 +1390,7 @@ assets/images/
 9. 不要将顺序文字归位改成随机漂浮、随机速度差或普通全局 parallax。
 10. 不要引入新的全站 smooth scroll / Lenis / 惯性滚动库，除非用户单独确认。
 11. 以当前代码为准：当前保留的是小范围 `data-text-sequence` / `data-text-step` 顺序文字归位，不是已回退的大范围方案。
-12. 不要把 `Scope Showcase` 改成 Park 网站风格；只保留多排小图横向流动的内容广度表达方式。
+12. 不要把 `Scope Showcase` 改成 Park 网站风格；当前已确认方向是克制的 sticky narrative + 图片发散 + Activity Diversity 承接，不是 Park 风格，也不是普通四排横向流动。
 13. 不要把 `Scope Showcase` 改成新的主分类入口。
 
 ## Deferred Ideas / 暂缓想法
